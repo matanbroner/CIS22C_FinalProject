@@ -1,0 +1,1 @@
+This folder has all the basic class files for the Menu, main, and Checks to be used.
