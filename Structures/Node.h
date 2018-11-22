@@ -8,12 +8,19 @@ class Node
 private:
     T data; // data held by the node
     Node<T> *pNode; // pointer to the next node in the structure
-public:
-    void setData(T dataAdd); // assigns to the data attribute
-    T getData(); // returns data
+protected:
     void setNext(Node<T> *ptr); // assigns the pnode attribute
     Node<T>* getNext(); // returns pnode address
+public:
+    Node<T>(T);
+    void setData(T dataAdd); // assigns to the data attribute
+    T getData(); // returns data
+
 };
+
+template<typename T>
+Node<T>::Node(T content) : data(content), pNode(nullptr)
+{}
 
 template<typename T>
 void Node<T>::setData(T dataAdd)
