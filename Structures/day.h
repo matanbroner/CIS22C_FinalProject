@@ -1,7 +1,8 @@
 #ifndef DAY_H
 #define DAY_H
-#include "Stack.h"
+#include "List.h"
 #include "food.h"
+#include "Stack.h"
 
 class Day {
 private:
@@ -16,7 +17,7 @@ private:
 	carb = 0,
 	prot = 0;
 
-	Stack<Food> allFood;
+	List<Food> allFood;
 
 public:
 	Day(Stack<Food> &foods, int dt);	// default constructor
@@ -50,7 +51,7 @@ Day::Day(Stack<Food> &foods, int dt) : date(dt) {
 		prot += temp.getProtein();
 		carb += temp.getCarb();
 		fat += temp.getFat();
-		allFood.push(temp);
+		allFood.addAtHead(temp);
 	}
 }
 
@@ -76,7 +77,7 @@ void Day::display(){
 	std::cout << "pKey: " << pKey << std::endl
 		<< "Calorie Target: " << getCal() <<  std::endl
 		<< "Foods: " << std::endl;
-		allFood.printStack();
+		allFood.printList();
 	std::cout << "Percent off target " << offTarget() << "%" << std::endl;
 }
 

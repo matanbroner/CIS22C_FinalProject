@@ -21,6 +21,7 @@ public:
 	Food operator= (const Food &right);
 	bool operator< (Food &right);
 	bool operator== (Food &right);
+	bool operator<= (Food &right);
 	friend std::ostream& operator<< (std::ostream &out, const Food &food);
 };
 
@@ -68,11 +69,14 @@ bool Food::operator< (Food &right) {
 bool Food::operator== (Food &right) {
 	return (getCal() == right.getCal());
 }
+bool Food::operator<= (Food &right) {
+	return (getCal() <= right.getCal());
+}
 std::ostream& operator<< (std::ostream &out, const Food &food) {
-	out << "name: " << food.name << std::endl;
-	out << "fat: " << food.fat << std::endl;
-	out << "carb: " << food.carb << std::endl;
-	out << "protein: " << food.protein << std::endl;
+	out << food.name << ", "
+		<< "f: " << food.fat << ", "
+		<< "c: " << food.carb << ", "
+		<< "p: " << food.protein << std::endl;
 	return out;
 }
 #endif 
