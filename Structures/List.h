@@ -1,4 +1,3 @@
-
 #ifndef List_h
 #define List_h
 #include "Node.h"
@@ -34,7 +33,7 @@ public:
      Post: none
      Return: data member of list at index given (or NULL)
      */
-    T getDataAtIndex(int i);
+    T& getDataAtIndex(int i);
     
     /* This method accepts a data value of type T and parses the given list to find the pointer address at which it is held, and returns the address if found. If not found, it returns NULL.
      Pre: T type data
@@ -107,6 +106,7 @@ public:
      */
     void printList();
     void reverseList();
+    T& operator[](int);
     
     ~List<T>(); // deletes all nodes and then the object
 };
@@ -128,8 +128,7 @@ int List<T>::getCount()
 template<typename T>
 void List<T>::add(T data)
 {
-    Node<T>* newNode = new Node<T>; // new node to add to the list
-    newNode->setData(data);
+    Node<T>* newNode = new Node<T>(data); // new node to add to the list
     Node<T>* temp = this->head;
     if (this->count >= 1) // if at least a head exists in the list
     {
@@ -166,7 +165,7 @@ void List<T>::addAtPos(int index, T data)
             throw std::out_of_range("invalid index"); // error message
         return;
     }
-   
+    
     if (index == 0) // add at head
     {
         this->addAtHead(data);
@@ -190,16 +189,15 @@ void List<T>::addAtPos(int index, T data)
             tempPtr->setNext(newNode); // tempPtr will now point to new node instead
             this->count++;
         }
-
+        
     }
 }
 
 template<typename T>
 void List<T>::addAtHead(T data)
 {
-    Node<T>* newNode = new Node<T>; // creates new node pointer with given data to serve as new head node
-    newNode->setData(data);
-   
+    Node<T>* newNode = new Node<T>(data); // creates new node pointer with given data to serve as new head node
+    
     newNode->setNext(this->head); // new node will replace the current head in the chain
     this->head = newNode; // new node is now acting as the list head
     this->count++;
@@ -211,7 +209,7 @@ void List<T>::addAtTail(T data)
     Node<T>* newNode = new Node<T>; // creates new node pointer with given data to serve as new head node
     newNode->setData(data);
     newNode->setNext(nullptr); // new node will act as the tail, hence its next node should be NULL
-
+    
     if (this->head != nullptr) // if there is at least one node in the list already
     {
         Node<T>* tempPtr = head; // retrieve address of current head
@@ -294,7 +292,7 @@ T List<T>::deleteAnywhere(int index)
 }
 
 template<typename T>
-T List<T>::getDataAtIndex(int i)
+T& List<T>::getDataAtIndex(int i)
 {
     Node<T>* tempPtr = this->head;
     while(tempPtr != nullptr) // ensures tempPtr does not move past list
@@ -310,6 +308,8 @@ T List<T>::getDataAtIndex(int i)
 template<typename T>
 Node<T>* List<T>::searchByData(T data)
 {
+    if (this->head == nullptr)
+        return this->head;
     Node<T>* tempPtr = this->head; // pointer to be used to find data in list
     while(tempPtr->getNext()) // parses through the list
     {
@@ -317,8 +317,7 @@ Node<T>* List<T>::searchByData(T data)
             return tempPtr;
         tempPtr = tempPtr->getNext(); // moves to next node
     }
-    std::cout << "Data not contained in list, returning head" << std::endl; // if not found, returns head address
-    return -1;
+    return nullptr;
 }
 
 template<typename T>
@@ -348,7 +347,7 @@ void List<T>::sortListAcsending()
             }
         }
     }
-
+    
 }
 
 template<typename T>
@@ -398,6 +397,12 @@ void List<T>::reverseList()
     {
         this->addAtTail(temp.deleteHead());
     }
+}
+
+template <typename T>
+T& List<T>::operator[](int index)
+{
+    return getDataAtIndex(index);
 }
 
 template <typename T>

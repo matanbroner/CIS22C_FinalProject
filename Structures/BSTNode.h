@@ -1,8 +1,13 @@
-
+/*
+ BST Node class
+ ==============
+ This class serves to act as a Node in a Binary Search Tree.
+ It as such has two pointer varaibles to children nodes in the tree.
+ It  can print data it is holding and provide manipulation of children nodes.
+ */
 #ifndef BSTNode_h
 #define BSTNode_h
 
-#include "Person.h"
 #include "Node.h"
 
 template <typename T>
@@ -10,8 +15,8 @@ class BSTNode : public Node<T>
 {
 private:
     int key;
-    BSTNode<T> *right;
-    BSTNode<T> *left;
+    BSTNode<T> *right; // right child node
+    BSTNode<T> *left; // left child node
     
 public:
     BSTNode<T>(T);
@@ -23,13 +28,14 @@ public:
     BSTNode<T>* getRight();
     int getKey();
     
-    bool isLeafNode();
+    bool isLeafNode(); // has no children (ie. left and right children are NULL)
 };
 
 template <typename T>
 BSTNode<T>::BSTNode(T data) : Node<T>(data)
 {
-    this->left = this->right = nullptr;
+    this->left = nullptr;
+    this->right = nullptr;
 }
 
 template <typename T>

@@ -1,11 +1,3 @@
-//
-//  Queue.h
-//  CIS22C_Lab2
-//
-//  Created by Matan Broner on 10/16/18.
-//  Copyright © 2018 Matan Broner. All rights reserved.
-//
-
 #ifndef Queue_h
 #define Queue_h
 #include "List.h"
