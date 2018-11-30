@@ -8,7 +8,7 @@
 using namespace std;
 
 const int F_SIZE = 31;			// CONSTANT ARRAY SIZE
-const int MAX_LINE_SIZE = 1024;         // We assume no line in the text file is bigger than this
+const int MAX_LINE_SIZE = 1024;		// We assume no line in the text file is bigger than this
 
 class ReadOnlyMode {};
 class WriteOnlyMode {};
