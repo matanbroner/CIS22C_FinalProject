@@ -7,7 +7,7 @@
 #include <iostream>
 using namespace std;
 
-const int F_SIZE = 31;									// CONSTANT ARRAY SIZE
+const int F_SIZE = 31;			// CONSTANT ARRAY SIZE
 const int MAX_LINE_SIZE = 1024;         // We assume no line in the text file is bigger than this
 
 class ReadOnlyMode {};
@@ -17,7 +17,7 @@ class File
 {
 private:
 	char fileName[F_SIZE];						// File Name
-	fstream fileObj;									// fstream object
+	fstream fileObj;						// fstream object
 public:
 	// This ctor opens an existing file for reading
 	File(const char* fileName, ReadOnlyMode mode);
@@ -31,7 +31,7 @@ public:
 	void writeOneLine(int);                             // we add a newline character
 	void writeOneLine(double);                          // we add a newline character
 
-	bool  eof();										// Check end of the file
+	bool  eof();					    // Check end of the file
 };
 
 #endif
