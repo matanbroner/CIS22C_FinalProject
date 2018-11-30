@@ -26,7 +26,7 @@ File::File(const char * fname, WriteOnlyMode mode) :
 }
 
 void File::readOneLine(char buffer[MAX_LINE_SIZE])
-{													                    // Read up to MAX_LINE_SIZE - 1 characters into buffer, until \n is seen.
+{							        // Read up to MAX_LINE_SIZE - 1 characters into buffer, until \n is seen.
 	fileObj.getline(buffer, MAX_LINE_SIZE);			// Does not store the \n into the string.  Always places the \0.
 }
 
