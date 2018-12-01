@@ -32,6 +32,52 @@ void Menu::mainMenu()
 }
 
 
+// Display main menu
+void Menu::addNewDataMenu()
+{
+	// Instructions
+	cout << "\n\n\tAdd new food\n";	
+	cout << "\tInstructions\n";
+	cout << "Format for adding new food";
+	cout << "Name, number of units, carbs, and fat";
+
+}
+
+// Delete Data Menu
+void  Menu::deleteDataMenu()
+{
+}
+
+// Find and display Menu
+void  Menu::findAndDisplayMenu()
+{
+}
+
+// Print data in hash table sequence
+void  Menu::listDataPrint()
+{
+}
+
+// Print Indented tree
+void  Menu::printTree()
+{
+}
+
+// Print indented tree
+void Menu::pIT()
+{
+
+}
+
+// Print Efficiency
+void  Menu::printEfficieny()
+{
+}
+
+void Menu::printTeamChoices()
+{
+
+}
 
 // Set input
 char* Menu::itemListPrompt()
