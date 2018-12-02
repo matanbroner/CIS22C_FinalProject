@@ -26,7 +26,7 @@ private:
     
 public:
     Day(List<Food> &foods, int dt);    // default constructor
-    Day(int f, int c, int p, int dt);    // file in constructor
+    Day(double f, double c, double p, int dt);    // file in constructor
     Day(Day &day);// copy constructor
     Day();
     ~Day();                                // destructor
@@ -40,7 +40,6 @@ public:
     bool operator< (const Day &right);
     bool operator> (const Day &right);
     void operator= (const Day &right);
-    void operator<<(std::ostream&);
     
     // public static variable
     // must be public for setter
@@ -48,13 +47,19 @@ public:
     static int getCal() {                // only seems to work inline
         return calTarget;
     }
-    void setCT(int CT) {                // inline
+    static void setCT(int CT) {                // inline
         calTarget = CT;                    // calTarget setter
     }
     
     static void sortByCalories();
     static void sortByDates();
 };
+
+std::ostream& operator<<(std::ostream& out, Day& day)
+{
+    out << day.getDate() << " - Cals: " << day.totalCal();
+    return out;
+}
 
 int Day::calTarget = 1200;
 
@@ -71,7 +76,7 @@ Day::Day(List<Food> &foods, int dt) : date(dt) {
     }
 }
 
-Day::Day(int f, int c, int p, int dt) :
+Day::Day(double f, double c, double p, int dt) :
 fat(f),
 carb(c),
 prot(p),
@@ -155,10 +160,6 @@ void Day::operator=(const Day &right)
     this->allFood = right.allFood;
 }
 
-void Day::operator<<(std::ostream &out)
-{
-    out << "[" << this->date << "]";
-}
 
 void Day::sortByCalories(){sortByCals = true;}
 void Day::sortByDates(){sortByCals = false;}

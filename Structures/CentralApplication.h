@@ -5,24 +5,27 @@
 #include "FoodFileManager.h"
 #include "FoodCreator.h"
 #include "StructurePrinter.h"
-#include "Day.h"
 #include "DayManager.h"
+//#include "DayManager.h"
 
 #endif /* CentralApplication_h */
 
 class CentralApplication
 {
 private:
+    std::string foodFile;
+    std::string dayFile;
     HashTable<Food> foodsTable;
     HashTable<Day> daysTable;
     BinarySearchTree<Day> daysByCaloriesTree;
+    DayManager dayManage;
     static std::string getFileAddress(std::string);
     static int getMenuChoice();
     void processMenuChoice(int);
     int findByDate(Day&);
     bool removeDay();
     static void pressEnterToContinue();
-    static void quit();
+    void quit();
 public:
     void menu();
 };
@@ -35,16 +38,24 @@ public:
 
 void CentralApplication::menu()
 {
+    int menuOption = -1;
     std::ifstream foodFile, dayFile;
-    foodFile.open(getFileAddress("Foods and Macronutrients"));
+    this->foodFile = getFileAddress("Foods and Macronutrients");
+    foodFile.open("/Users/matanbroner/Desktop/foods.txt");
     dayFile.open(getFileAddress("Logged Days"));
-	// will add DayFileManager file reader condition once present
-    if (FoodFileManager::readFromInputFileIntoTable(foodFile, this->foodsTable) && DayManager::foodFileFunction(dayFile, this->daysTable))     {
+    if (FoodFileManager::readFromInputFileIntoTable(foodFile, this->foodsTable) && dayManage.readFromDayFile(dayFile, this->daysByCaloriesTree, this->daysTable)) // will add DayFileManager file reader condition once present
+    {
+        std::cout << "BOTH OPEN";
         pressEnterToContinue();
-        int menuOption = getMenuChoice();
-        processMenuChoice(menuOption);
+        while (menuOption != 0)
+        {
+            menuOption = getMenuChoice();
+            processMenuChoice(menuOption);
+        }
     }
+
 }
+
 
 /*
  Private Functions
@@ -73,7 +84,8 @@ int CentralApplication::getMenuChoice()
     std::cout << "[7] - List efficiency stats" << std::endl;
     std::cout << "[8] - Visualize logged days' calories vs. target consumption" << std::endl;
     std::cout << "[9] - Undo last deletion of a day" << std::endl;
-    std::cout << "[10] - Save all changes" << std::endl;
+    std::cout << "[10] - Add a new food to your database" << std::endl;
+    std::cout << "[11] - Save all changes" << std::endl;
     std::cout << "[0] - Quit" << std::endl;
     std::cout << "--> ";
     std::cin >> choice;
@@ -89,10 +101,17 @@ int CentralApplication::getMenuChoice()
 
 void CentralApplication::processMenuChoice(int choice)
 {
+    std::cin.ignore();
     switch (choice)
     {
-        case 1: // run day creator
+        case 1:
+        {
+            Day newDay;
+            newDay = dayManage.createNewDay(this->foodsTable);
+            this->daysTable.insert(newDay, std::to_string(newDay.getDate()));
+            this->daysByCaloriesTree.insert(newDay);
             break;
+        }
         case 2:
         {
             if (removeDay())
@@ -109,17 +128,23 @@ void CentralApplication::processMenuChoice(int choice)
         }
         case 4: this->foodsTable.displayTable(); break;
         case 5: this->daysTable.displayTable(); break;
-        case 6: StructurePrinter<Day>::printBinarySearchTree(this->daysByCaloriesTree); break;
+        case 6: StructurePrinter<Day>::printBinarySearchTree(this->daysByCaloriesTree);
+            break;
         case 7: this->foodsTable.stats(); break;
         case 8: // graph function
             break;
         case 9: // pop from stack and reinsert both into tree and into days hash table
             break;
-        case 10: // will use write to file for both food and day, to be added
+        case 10:
+        {
+            std::string newFoodName;
+            std::cout << "Name of new food: ";
+            getline(std::cin, newFoodName);
+            this->foodsTable.insert(FoodCreator::create(newFoodName), newFoodName);
+        }
             break;
         case 0: quit();
     }
-    pressEnterToContinue();
 }
 
 bool CentralApplication::removeDay()
@@ -173,7 +198,9 @@ void CentralApplication::quit()
         std::cin >> choice;
     }
     if (choice == 1)
-        // write to input files
-        ;
+    {
+        std::ofstream outputFoods(this->foodFile, std::ofstream::out);
+        FoodFileManager::writeTableToInputFile(outputFoods, this->foodsTable);
+    }
     std::cout << "Goodbye!" << std::endl;
 }

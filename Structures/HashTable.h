@@ -25,7 +25,7 @@ class HashTable
 private:
     HashNode<T> **dataTable; // holds the HashNode pointers
     const int size = 300; // maximum entries the table can hold
-    int count = 0, collisions = 0, attempts = 0;
+    int count = 0, collisions = 0, longestCollision = 0, attempts = 0;
     // current entries, number of collisions that have occured, and attmepted insertions into the table
     double loadFactor = 0; // percentage of table filled
     List<std::string> keyList;
@@ -42,7 +42,7 @@ public:
      Return: true if inserted
      */
     bool insert(T, std::string);
-    bool insertFood(Food, std::string);
+    bool insertFood(Food&, std::string);
     
     /*
      This method is used to find an alternative index for a value to be inserted if the index found according to the user defined hash function has yielded an occupied index. It continually adds a step value squared and modulo's the entire value by the size of the table. If the value is occupied it does so continually, until a free spot is found.
@@ -69,7 +69,8 @@ public:
     int searchFood(std::string);
     int search(std::string);
     int getCount(); // returns the amount of entries in the table (ie. count)
-    T operator[](int); // allows user to treat table as an array by using bracketed index notation
+    int getSize();  // returns available size of table
+    HashNode<T>* operator[](int); // allows user to treat table as an array by using bracketed index notation
     
     /*
      This method calculates the table's load factor. This value is the percentage of spots in the table that are occupied.
@@ -112,37 +113,11 @@ int HashTable<T>::getCount()
 {return this->count;}
 
 template <typename T>
-bool HashTable<T>::insert(T value, std::string givenKey)
-{
-    this->keyList.add(givenKey);
-    this->attempts++; // attempts always increased to show if attempts are failed
-    bool inserted = false;
-    if (this->isFull())
-        return inserted;
-    
-    HashNode<Food>* tempNode = new HashNode<Food>(value, givenKey); // create temporary node
-    int hashKey = StringAssistant::hasher(givenKey); // Person type specific hashing function
-    if (this->dataTable[hashKey] == nullptr) // if initial hash index is not occupied
-    {
-        this->dataTable[hashKey] = tempNode; // insert the node
-        this->count++;
-        inserted = true;
-        return inserted;
-    }
-    else // a collision has occured
-    {
-        this->collisions++;
-        tempNode->setCollisionFlag(); // nodes hold the knowledge that they have caused a collision
-        hashKey = quadraticProbe(hashKey); // quadratic probe until empty spot found
-        this->dataTable[hashKey] = tempNode; // insert the node
-        this->count++;
-        inserted = true;
-    }
-    return inserted;
-}
+int HashTable<T>::getSize()
+{return this->size;}
 
 template <>
-bool HashTable<Food>::insertFood(Food value, std::string givenKey)
+bool HashTable<Food>::insertFood(Food& value, std::string givenKey)
 {
     this->keyList.add(givenKey);
     this->attempts++; // attempts always increased to show if attempts are failed
@@ -172,6 +147,37 @@ bool HashTable<Food>::insertFood(Food value, std::string givenKey)
 }
 
 template <typename T>
+bool HashTable<T>::insert(T value, std::string givenKey)
+{
+    this->keyList.add(givenKey);
+    this->attempts++; // attempts always increased to show if attempts are failed
+    bool inserted = false;
+    if (this->isFull())
+        return inserted;
+    
+    HashNode<T>* tempNode = new HashNode<T>(value, givenKey); // create temporary node
+    int hashKey = StringAssistant::hasher(givenKey); // Person type specific hashing function
+    if (this->dataTable[hashKey] == nullptr) // if initial hash index is not occupied
+    {
+        this->dataTable[hashKey] = tempNode; // insert the node
+        this->count++;
+        inserted = true;
+        return inserted;
+    }
+    else // a collision has occured
+    {
+        this->collisions++;
+        tempNode->setCollisionFlag(); // nodes hold the knowledge that they have caused a collision
+        hashKey = quadraticProbe(hashKey); // quadratic probe until empty spot found
+        this->dataTable[hashKey] = tempNode; // insert the node
+        this->count++;
+        inserted = true;
+    }
+    return inserted;
+}
+
+
+template <typename T>
 int HashTable<T>::quadraticProbe(int index)
 {
     int step = 1;
@@ -179,6 +185,8 @@ int HashTable<T>::quadraticProbe(int index)
     {
         index = (index + (step * step)) % this->size; // (ex. index 6: (6 + (2 * 2)) % 20 = 10)
     }
+    if (step > longestCollision)
+        longestCollision = step;
     return index;
 }
 
@@ -227,9 +235,13 @@ bool HashTable<Food>::createPotentialMatches(std::string& word)
         }
     }
     if (choice == -1)
+    {
+        std::cin.ignore();
         return false;
+    }
     else
     {
+        std::cin.ignore();
         word = this->keyList[choice-1];
         return true;
     }
@@ -313,9 +325,9 @@ double HashTable<T>::calcLoadFactor()
 }
 
 template <typename T>
-T HashTable<T>::operator[](int index)
+HashNode<T>* HashTable<T>::operator[](int index)
 {
-    return this->dataTable[index]->getData();
+    return this->dataTable[index];
 }
 
 
@@ -329,8 +341,8 @@ void HashTable<T>::displayTable()
         if (this->dataTable[index] != nullptr)
         {
             std::cout << std::left << std::setw(22) << this->dataTable[index]->getKey();
-            std::cout << std::setw(22) << &this->dataTable[index]->getData();
-            std::cout << std::left << std::setw(13) << index;
+            std::cout  << std::setw(22) << this->dataTable[index]->getData();
+            std::cout << std::setw(13) << index;
             if (this->dataTable[index]->collision())
             {
                 std::cout << std::left << std::setw(5) << "*";
@@ -354,6 +366,7 @@ void HashTable<T>::stats()
     std::cout << "Items Loaded: " << this->count << " of " << this->attempts << " attempts" << std::endl;
     std::cout << "Load Factor: " << this->calcLoadFactor() << "%" << std::endl;
     std::cout << "Number of Collisions: " << this->collisions << std:: endl;
+    std::cout << "Longest Collision Path: " << this->longestCollision << std::endl;
 }
 
 

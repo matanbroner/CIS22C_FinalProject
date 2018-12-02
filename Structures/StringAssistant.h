@@ -9,9 +9,8 @@
 
 #include "Food.h"
 #include "Day.h"
-#include <limits>
 #include <algorithm>
-
+#include <limits>
 class StringAssistant
 {
 private:
@@ -30,6 +29,7 @@ public:
 
 int StringAssistant::hasher(std::string date)
 {
+    //std::cout << "DATE HASHER" << std::endl;
     int sum = 0;
     for (char c : date)
     {
@@ -43,7 +43,7 @@ int StringAssistant::hasher(std::string date)
         {
             sum = 0;
             for (char c : tempSum)
-                sum += (int)c;
+                sum += c-'0';
             tempSum = std::to_string(sum);
         }
     }
@@ -52,6 +52,7 @@ int StringAssistant::hasher(std::string date)
 
 int StringAssistant::hasher(Day& day)
 {
+    //std::cout << "DAY HASHER" << std::endl;
     int sum = 0;
     std::string date = std::to_string(day.getDate());
     for (char c : date)
@@ -75,27 +76,28 @@ int StringAssistant::hasher(Day& day)
 
 int StringAssistant::hasher(Food& food)
 {
+    //std::cout << "FOOD HASHER" << std::endl;
     std::string name = food.getName();
     int sum = 0;
     for (char c : name)
     {
-        sum += (int)c;
+        sum += c - '0';
     }
-    while (sum > 9)
+    while (sum > 10)
     {
         std::string stringSum = std::to_string(sum);
         sum = 0;
-        for (char c : stringSum)
+        for (int i = 0; i < stringSum.length(); i++)
         {
-            sum += (int)c;
+            sum += stringSum[i] - '0';
         }
     }
-    //std::cout << "SUM: " << sum << std::endl;
     return sum;
 }
 
 int StringAssistant::hashStringName(std::string name)
 {
+//std::cout << "STRING NAME HASHER" << std::endl;
     Food temp(name, 1, 1, 1);
     return hasher(temp);
 }

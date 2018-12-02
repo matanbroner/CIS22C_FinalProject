@@ -19,7 +19,7 @@ private:
     bool collisionFlag = false; // true if caused collision
     
 public:
-    HashNode(T, std::string); // data and key
+    HashNode(T&, std::string); // data and key
     std::string getKey();
     T& getData();
     void setCollisionFlag(); // sets to true
@@ -30,7 +30,7 @@ public:
 
 
 template <typename T>
-HashNode<T>::HashNode(T givenData, std::string givenKey)
+HashNode<T>::HashNode(T& givenData, std::string givenKey) : data(givenData)
 {
     this->data = givenData;
     this->key = givenKey;

@@ -232,7 +232,8 @@ T List<T>::deleteHead()
         T tempData = tempPtr->getData(); // holds the data member held in the head node
         this->head = tempPtr->getNext(); // sets hea pointer to one after the current head
         this->count--;
-        delete tempPtr; // deletes head
+        if (this->count > 1)
+            delete tempPtr; // deletes head
         if (this->count == 0)
             this->head = nullptr;
         return tempData;
@@ -379,10 +380,11 @@ void List<T>::printList()
         while(readPtr) // while the node not set past tail
         {
             std::cout << readPtr->getData(); // prints the data member
+            if (readPtr->getNext())
+                std::cout << ", ";
             readPtr = readPtr->getNext(); // moves to next pointer
         }
     }
-    std::cout << std::endl;
 }
 
 template <typename T>

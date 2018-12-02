@@ -22,12 +22,14 @@ public:
     double getCarb();
     double getFat();
     double getCal();
+    double getQuantity();
+    std::string getUnit();
     void printFoodWithMacros();
     Food operator= (const Food &right);
     bool operator< (Food &right);
     bool operator== (Food &right);
     bool operator<= (Food &right);
-    friend std::ostream& operator<< (std::ostream &out, const Food &food);
+    friend std::ostream& operator<< (std::ostream &out, Food &food);
 };
 
 
@@ -38,10 +40,12 @@ Food::Food()
 }
 
 Food::Food(const Food &copy) {
-    protein = copy.protein;
-    carb = copy.carb;
-    fat = copy.fat;
-    name = copy.name;
+    this->protein = copy.protein;
+    this->carb = copy.carb;
+    this->fat = copy.fat;
+    this->name = copy.name;
+    this->unit = copy.unit;
+    this->quantity = copy.quantity;
 }
 
 Food::Food(std::string n, double c, double f, double p) :
@@ -56,8 +60,7 @@ name(n)
 
 Food::Food(std::string n, double c, double f, double p, double q, std::string u) :
 name(n), protein(p), carb(c), fat(f), quantity(q), unit(u)
-{
-}
+{}
 
 Food::~Food() {}
 
@@ -77,6 +80,14 @@ double Food::getFat() {
 double Food::getCal() {
     return ((protein * pVal) + (carb * cVal) + (fat * fVal));
 }
+double Food::getQuantity()
+{
+    return this->quantity;
+}
+std::string Food::getUnit()
+{
+    return this->unit;
+}
 Food Food::operator= (const Food &right) {
     this->name = right.name;
     this->protein = right.protein; this->carb = right.carb; this->fat = right.fat;
@@ -91,8 +102,8 @@ bool Food::operator== (Food &right) {
 bool Food::operator<= (Food &right) {
     return (getCal() <= right.getCal());
 }
-std::ostream& operator<< (std::ostream &out, const Food &food) {
-    out << food.name;
+std::ostream& operator<< (std::ostream &out, Food &food) {
+    out << food.getName() << ": " << food.getCal() << " kC";
     return out;
 }
 void Food::printFoodWithMacros()
