@@ -16,6 +16,7 @@
 #include "BinarySearchTree.h"
 #include "List.h"
 
+
 const double SIMILIARITY_METRIC = 0.75;
 
 template <typename T>
@@ -41,6 +42,7 @@ public:
      Return: true if inserted
      */
     bool insert(T, std::string);
+    bool insertFood(Food, std::string);
     
     /*
      This method is used to find an alternative index for a value to be inserted if the index found according to the user defined hash function has yielded an occupied index. It continually adds a step value squared and modulo's the entire value by the size of the table. If the value is occupied it does so continually, until a free spot is found.
@@ -64,9 +66,10 @@ public:
      Post: none
      Return: index is found, -1 if not
      */
+    int searchFood(std::string);
     int search(std::string);
     int getCount(); // returns the amount of entries in the table (ie. count)
-    T& operator[](int); // allows user to treat table as an array by using bracketed index notation
+    T operator[](int); // allows user to treat table as an array by using bracketed index notation
     
     /*
      This method calculates the table's load factor. This value is the percentage of spots in the table that are occupied.
@@ -111,12 +114,43 @@ int HashTable<T>::getCount()
 template <typename T>
 bool HashTable<T>::insert(T value, std::string givenKey)
 {
+    this->keyList.add(givenKey);
     this->attempts++; // attempts always increased to show if attempts are failed
     bool inserted = false;
     if (this->isFull())
         return inserted;
     
-    HashNode<T>* tempNode = new HashNode<T>(value, givenKey); // create temporary node
+    HashNode<Food>* tempNode = new HashNode<Food>(value, givenKey); // create temporary node
+    int hashKey = StringAssistant::hasher(givenKey); // Person type specific hashing function
+    if (this->dataTable[hashKey] == nullptr) // if initial hash index is not occupied
+    {
+        this->dataTable[hashKey] = tempNode; // insert the node
+        this->count++;
+        inserted = true;
+        return inserted;
+    }
+    else // a collision has occured
+    {
+        this->collisions++;
+        tempNode->setCollisionFlag(); // nodes hold the knowledge that they have caused a collision
+        hashKey = quadraticProbe(hashKey); // quadratic probe until empty spot found
+        this->dataTable[hashKey] = tempNode; // insert the node
+        this->count++;
+        inserted = true;
+    }
+    return inserted;
+}
+
+template <>
+bool HashTable<Food>::insertFood(Food value, std::string givenKey)
+{
+    this->keyList.add(givenKey);
+    this->attempts++; // attempts always increased to show if attempts are failed
+    bool inserted = false;
+    if (this->isFull())
+        return inserted;
+    
+    HashNode<Food>* tempNode = new HashNode<Food>(value, givenKey); // create temporary node
     int hashKey = StringAssistant::hashStringName(givenKey); // Person type specific hashing function
     if (this->dataTable[hashKey] == nullptr) // if initial hash index is not occupied
     {
@@ -134,7 +168,6 @@ bool HashTable<T>::insert(T value, std::string givenKey)
         this->count++;
         inserted = true;
     }
-    this->keyList.add(givenKey);
     return inserted;
 }
 
@@ -149,122 +182,26 @@ int HashTable<T>::quadraticProbe(int index)
     return index;
 }
 
-template <typename T>
-int HashTable<T>::search(std::string searchValue)
-{
-    StringAssistant::trimSpaces(searchValue);
-    int hashKey = StringAssistant::hashStringName(searchValue); // type specific hashing function
-
-    if (this->dataTable[hashKey] != nullptr)
-        if (this->dataTable[hashKey]->getKey() == searchValue) // if found at first try
-            return hashKey;
-    int counter = 0;
-    List<HashNode<T>*> potentialMatches;
-    for (int step = 1; counter < this->count; counter++, step++) //should not take more attempts than there are entries in the table (ie. counter)
-    {
-        hashKey = ((hashKey + (step * step)) % this->size); // quadratically probe
-        
-        if (hashKey >= 0 && hashKey < this->size && this->dataTable[hashKey] != nullptr) // if new index is even valid for the table
-            if (this->dataTable[hashKey]->getKey() == searchValue)
-                return hashKey; // if found value, return
-    }
-    sortKeyListBySimilarity(searchValue, this->keyList.getCount());
-    if (createPotentialMatches(searchValue))
-        return this->search(searchValue);
-    return -1; // indicates not found
-}
-
-template <typename T>
-bool HashTable<T>::remove(std::string removeValue)
-{
-    int elementPosition = this->search(removeValue); // search for value
-    if (elementPosition == -1) // -1 indicates not found
-        return false;
-    else
-    { // delete the node at the index
-        delete this->dataTable[elementPosition];
-        this->dataTable[elementPosition] = nullptr;
-        this->count--;
-        return true;
-    }
-}
-
-template <typename T>
-bool HashTable<T>::isFull()
-{
-    return (count >= size);
-}
-
-template <typename T>
-double HashTable<T>::calcLoadFactor()
-{
-    this->loadFactor = (double(this->count)/this->size) * 100;
-    return this->loadFactor;
-}
-
-template <typename T>
-T& HashTable<T>::operator[](int index)
-{
-    return this->dataTable[index]->getData();
-}
-
-template <typename T>
-void HashTable<T>::sortKeyListBySimilarity(std::string word, int listCount)
+template <>
+void HashTable<Food>::sortKeyListBySimilarity(std::string word, int listCount)
 {
     // Implements a classic bubble sort
-    if (listCount == 1)
+    if (listCount == 0)
         return;
-    for (int i = 0; i < listCount - 1; i++)
+    for (int i = 0; i < listCount-1; i++)
         if (StringAssistant::similarity(word, this->keyList[i]) < StringAssistant::similarity(word, this->keyList[i+1]))
         {
             std::string temp = this->keyList[i];
+            if (temp == "White Sugar") temp+="***HERE***";
             this->keyList[i] = this->keyList[i+1];
             this->keyList[i+1] = temp;
         }
     sortKeyListBySimilarity(word, listCount - 1);
-
+    
 }
 
-
-template <typename T>
-void HashTable<T>::displayTable()
-{
-    std::printf("%-20s %-15s %10s %10s %5s", "Hash Key", "Data", "Index", "C?", "IPC");
-    std::cout  << "\n=================================================================" << std::endl;
-    for (int index = 0; index < this->size; index++)
-    {
-        if (this->dataTable[index] != nullptr)
-        {
-            std::cout << std::left << std::setw(22) << this->dataTable[index]->getKey();
-            std::cout << std::setw(22) << this->dataTable[index]->getData();
-            std::cout << std::left << std::setw(13) << index;
-            if (this->dataTable[index]->collision())
-            {
-                std::cout << std::left << std::setw(5) << "*";
-                std::cout << std::left << std::setw(10) << StringAssistant::hashFoodByName(this->dataTable[index]->getData());
-            }
-            std::cout << std::endl;
-        }
-    }
-    std::cout  << "\n=================================================================" << std::endl;
-    std::cout << "[C? - Collision occured on entry?] == [IPC - Index Pre Collision]" << std::endl;
-    std::cout  << "=================================================================" << std::endl;
-}
-
-template <typename T>
-void HashTable<T>::stats()
-{
-    std::cout << "=======================" << std::endl;
-    std::cout << "Hash Table Information:" << std::endl;
-    std::cout << "=======================" << std::endl;
-    std::cout << "Table size: " << this->size << std::endl;
-    std::cout << "Items Loaded: " << this->count << " of " << this->attempts << " attempts" << std::endl;
-    std::cout << "Load Factor: " << this->calcLoadFactor() << "%" << std::endl;
-    std::cout << "Number of Collisions: " << this->collisions << std:: endl;
-}
-
-template <typename T>
-bool HashTable<T>::createPotentialMatches(std::string& word)
+template <>
+bool HashTable<Food>::createPotentialMatches(std::string& word)
 {
     int choice;
     if (StringAssistant::similarity(word, this->keyList[0]) < SIMILIARITY_METRIC)
@@ -298,6 +235,126 @@ bool HashTable<T>::createPotentialMatches(std::string& word)
     }
 }
 
+
+template <>
+int HashTable<Food>::searchFood(std::string searchValue)
+{
+    StringAssistant::trimSpaces(searchValue);
+    int hashKey = StringAssistant::hashStringName(searchValue); // type specific hashing function
+
+    if (this->dataTable[hashKey] != nullptr)
+        if (this->dataTable[hashKey]->getKey() == searchValue) // if found at first try
+            return hashKey;
+    int counter = 0;
+    List<HashNode<Food>*> potentialMatches;
+    for (int step = 1; counter < this->count; counter++, step++) //should not take more attempts than there are entries in the table (ie. counter)
+    {
+        hashKey = ((hashKey + (step * step)) % this->size); // quadratically probe
+        
+        if (hashKey >= 0 && hashKey < this->size && this->dataTable[hashKey] != nullptr) // if new index is even valid for the table
+            if (this->dataTable[hashKey]->getKey() == searchValue)
+                return hashKey; // if found value, return
+    }
+    sortKeyListBySimilarity(searchValue, this->keyList.getCount());
+    if (createPotentialMatches(searchValue))
+        return this->searchFood(searchValue);
+    return -1; // indicates not found
+}
+
+template<typename T>
+int HashTable<T>::search(std::string searchValue)
+{
+    StringAssistant::trimSpaces(searchValue);
+    int hashKey = StringAssistant::hasher(searchValue); // type specific hashing function
+    
+    if (this->dataTable[hashKey] != nullptr)
+        if (this->dataTable[hashKey]->getKey() == searchValue) // if found at first try
+            return hashKey;
+    int counter = 0;
+    for (int step = 1; counter < this->count; counter++, step++) //should not take more attempts than there are entries in the table (ie. counter)
+    {
+        hashKey = ((hashKey + (step * step)) % this->size); // quadratically probe
+        
+        if (hashKey >= 0 && hashKey < this->size && this->dataTable[hashKey] != nullptr) // if new index is even valid for the table
+            if (this->dataTable[hashKey]->getKey() == searchValue)
+                return hashKey; // if found value, return
+    }
+
+    return -1; // indicates not found
+}
+
+
+template <typename T>
+bool HashTable<T>::remove(std::string removeValue)
+{
+    int elementPosition = this->search(removeValue); // search for value
+    if (elementPosition == -1) // -1 indicates not found
+        return false;
+    else
+    { // delete the node at the index
+        delete this->dataTable[elementPosition];
+        this->dataTable[elementPosition] = nullptr;
+        this->count--;
+        return true;
+    }
+}
+
+template <typename T>
+bool HashTable<T>::isFull()
+{
+    return (count >= size);
+}
+
+template <typename T>
+double HashTable<T>::calcLoadFactor()
+{
+    this->loadFactor = (double(this->count)/this->size) * 100;
+    return this->loadFactor;
+}
+
+template <typename T>
+T HashTable<T>::operator[](int index)
+{
+    return this->dataTable[index]->getData();
+}
+
+
+template <typename T>
+void HashTable<T>::displayTable()
+{
+    std::printf("%-20s %-15s %10s %10s %5s", "Hash Key", "Data", "Index", "C?", "IPC");
+    std::cout  << "\n=================================================================" << std::endl;
+    for (int index = 0; index < this->size; index++)
+    {
+        if (this->dataTable[index] != nullptr)
+        {
+            std::cout << std::left << std::setw(22) << this->dataTable[index]->getKey();
+            std::cout << std::setw(22) << &this->dataTable[index]->getData();
+            std::cout << std::left << std::setw(13) << index;
+            if (this->dataTable[index]->collision())
+            {
+                std::cout << std::left << std::setw(5) << "*";
+                std::cout << std::left << std::setw(10) << StringAssistant::hasher(this->dataTable[index]->getData());
+            }
+            std::cout << std::endl;
+        }
+    }
+    std::cout  << "\n=================================================================" << std::endl;
+    std::cout << "[C? - Collision occured on entry?] == [IPC - Index Pre Collision]" << std::endl;
+    std::cout  << "=================================================================" << std::endl;
+}
+
+template <typename T>
+void HashTable<T>::stats()
+{
+    std::cout << "=======================" << std::endl;
+    std::cout << "Hash Table Information:" << std::endl;
+    std::cout << "=======================" << std::endl;
+    std::cout << "Table size: " << this->size << std::endl;
+    std::cout << "Items Loaded: " << this->count << " of " << this->attempts << " attempts" << std::endl;
+    std::cout << "Load Factor: " << this->calcLoadFactor() << "%" << std::endl;
+    std::cout << "Number of Collisions: " << this->collisions << std:: endl;
+}
 
 
 template <typename T>

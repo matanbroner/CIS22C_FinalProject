@@ -4,6 +4,10 @@
 #include "Food.h"
 #include "Stack.h"
 
+#include <iostream>
+
+static bool sortByCals;
+
 class Day {
 private:
     static int calTarget;
@@ -23,9 +27,11 @@ private:
 public:
     Day(List<Food> &foods, int dt);    // default constructor
     Day(int f, int c, int p, int dt);    // file in constructor
-    Day(Day &day);                        // copy constructor
+    Day(Day &day);// copy constructor
+    Day();
     ~Day();                                // destructor
     
+    int getDate();
     void display();                        // display contents of the day
     double offTarget();                    // return % away from target cal
     int totalCal();                        // return total calories of macros
@@ -33,20 +39,26 @@ public:
     bool operator== (const Day &right);
     bool operator< (const Day &right);
     bool operator> (const Day &right);
+    void operator= (const Day &right);
+    void operator<<(std::ostream&);
     
     // public static variable
     // must be public for setter
     
     static int getCal() {                // only seems to work inline
         return calTarget;
-        return 0;// return target calories for day
     }
     void setCT(int CT) {                // inline
         calTarget = CT;                    // calTarget setter
     }
+    
+    static void sortByCalories();
+    static void sortByDates();
 };
 
 int Day::calTarget = 1200;
+
+
 
 Day::Day(List<Food> &foods, int dt) : date(dt) {
     Food temp;
@@ -75,10 +87,16 @@ fat(copy.fat),
 allFood(copy.allFood)
 {}
 
+Day::Day()
+{
+    this->date = 0; this->pKey = 0;
+    this->prot = 0; this->carb = 0; this->fat = 0;
+}
+
 Day::~Day() {}
 
 void Day::display(){
-    std::cout << "pKey: " << pKey << std::endl
+    std::cout << "Date: " << this->date << std::endl
     << "Calorie Target: " << getCal() <<  std::endl
     << "Foods: " << std::endl;
     allFood.printList();
@@ -95,27 +113,53 @@ int Day::totalCal() {
     return ((prot * pVal) + (carb * cVal) + (fat * fVal));
 }
 
+int Day::getDate(){return this->date;}
+
 bool Day::operator== (const Day &right) {
-    return (
-            fat == right.fat &&
-            carb == right.carb &&
-            prot == right.prot
-            );
+    if(sortByCals)
+        return (
+                fat == right.fat &&
+                carb == right.carb &&
+                prot == right.prot
+                );
+    else return (this->date == right.date);
 }
 
 bool Day::operator< (const Day &right) {
-    return (
-            fat < right.fat &&
-            carb < right.carb &&
-            prot < right.prot
-            );
+    if(sortByCals)
+        return (
+                fat < right.fat &&
+                carb < right.carb &&
+                prot < right.prot
+                );
+    else return (this->date < right.date);
 }
 
 bool Day::operator> (const Day &right) {
-    return (
-            fat > right.fat &&
-            carb > right.carb &&
-            prot > right.prot
-            );
+    if (sortByCals)
+        return (
+                fat > right.fat &&
+                carb > right.carb &&
+                prot > right.prot
+                );
+    
+    else return (this->date > right.date);
 }
+
+void Day::operator=(const Day &right)
+{
+    this->pKey = right.pKey;
+    this->prot = right.prot;
+    this->carb = right.carb;
+    this->fat = right.fat;
+    this->allFood = right.allFood;
+}
+
+void Day::operator<<(std::ostream &out)
+{
+    out << "[" << this->date << "]";
+}
+
+void Day::sortByCalories(){sortByCals = true;}
+void Day::sortByDates(){sortByCals = false;}
 #endif

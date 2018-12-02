@@ -44,7 +44,7 @@ Food::Food(const Food &copy) {
     name = copy.name;
 }
 
-Food::Food(std::string n, double p, double f, double c) :
+Food::Food(std::string n, double c, double f, double p) :
 protein(p),
 carb(c),
 fat(f),
@@ -54,7 +54,7 @@ name(n)
     this->unit = "unit";
 }
 
-Food::Food(std::string n, double p, double c, double f, double q, std::string u) :
+Food::Food(std::string n, double c, double f, double p, double q, std::string u) :
 name(n), protein(p), carb(c), fat(f), quantity(q), unit(u)
 {
 }
