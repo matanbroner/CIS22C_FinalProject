@@ -12,16 +12,19 @@
 
 class DayManager {
 private:
-	bool choice();
-	static int days;
+	static bool choice();
+	//static int days;
 	static Day* currentDay;
-	static Stack removedDays;
 public:
+	//static Stack removedDays;
 	DayManager();
 	~DayManager();
-	static Day* foodInputFunction();
-	static bool foodFileFunction(ifstream &input, BinarySearchTree &tree);
+	static Day foodInputFunction();
+	static bool foodFileFunction(std::ifstream &input, BinarySearchTree<Day> &tree);
 };
+
+DayManager::DayManager() {}
+DayManager::~DayManager() {}
 
 bool DayManager::choice() {
 	
@@ -42,11 +45,9 @@ bool DayManager::choice() {
 	return ((answer == "y") || (answer == "yes")) ? true : false;
 }
 
-DayManager::DayManager() : days(0) {}
-DayManager::~DayManager() {}
-
-static Day* DayManager::foodInputFunction();
-	List foodInputList;
+Day DayManager::foodInputFunction() {
+	List<Food> foodInputList;
+	int days;
 	while(true) {
 		if (!choice()) {
 			break;
@@ -55,44 +56,43 @@ static Day* DayManager::foodInputFunction();
 		days++;								// add to static days for date input
 		// search for food
 		
-		foodInputList.addAtHead();			// build food list for day
+		// foodInputList.addAtHead();			// build food list for day
 		}
 	// create day
-	currentDay = new Day(foodInputList, days);	// assign ptr to current day
-	return currentDay;							// return ptr to current day
+	Day temp(foodInputList, days);	// assign ptr to current day
+	return temp;							// return ptr to current day
 }
 
-static bool DayManager::foodFileFunction(ifstream &input, BinarySearchTree &tree) {
+bool DayManager::foodFileFunction(std::ifstream &input, BinarySearchTree<Day> &tree) {
 	
 	// validate file
 	if (!input.is_open()) {
 		return false;
 	}
+	
+	std::string tempString;
+	getline(input, tempstring);			// trash header line
+	getline(input, tempstring);			// get calorie target
+	Day::setCT(tempstring);				// set calorie target
 	while (input.is_open() && !input.eof()) {
-		std::string tempString;
-		std::string name, quantity, unit, carb, fat, protein;
-		getline(input, name, '(');
-
-		getline (input, tempString, ')');
-		parseQuantityAndUnit(tempString, quantity, unit);
-		getline(input, tempString, '-');
-		getline(input, tempString, ' ');
+		std::string date, carb, fat, protein;
+		getline(input, protein, ' ');
 		getline(input, carb, ' ');
 		getline(input, fat, ' ');
-		getline(input, protein);
-		StringAssistant::trimSpaces(name);
-		Food addedFood(name, std::stod(protein), std::stod(carb), std::stod(fat), std::stod(quantity), unit);
-		tree.insert(addedFood, name);
+		getline(input, date);
+		Day(fat, carb, protein, date);
+		tree.insert(Day(std::stod(fat), std::stod(carb), std::stod(protein), std::stod(date)));
 	}
+
 	return true;
 }
 
-static void DayManager::removeToStack(Day &toRemove, BinarySearchTree &tree) {
-	Day temp();
-	tree.findForModification(toRemove, temp)
-	tree.remove(toRemove);
-	removedDays.push(temp);
-}
+	//  void DayManager::removeToStack(Day &toRemove, BinarySearchTree<Day> &tree) {
+	// 	Day temp();
+	// 	tree.findForModification(toRemove, temp)
+	// 	tree.remove(toRemove);
+	// 	removedDays.push(temp);
+// }
 
 
 #endif

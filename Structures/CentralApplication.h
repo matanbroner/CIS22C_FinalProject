@@ -6,6 +6,7 @@
 #include "FoodCreator.h"
 #include "StructurePrinter.h"
 #include "Day.h"
+#include "DayManager.h"
 
 #endif /* CentralApplication_h */
 
@@ -37,8 +38,8 @@ void CentralApplication::menu()
     std::ifstream foodFile, dayFile;
     foodFile.open(getFileAddress("Foods and Macronutrients"));
     dayFile.open(getFileAddress("Logged Days"));
-    if (FoodFileManager::readFromInputFileIntoTable(foodFile, this->foodsTable)) // will add DayFileManager file reader condition once present
-    {
+	// will add DayFileManager file reader condition once present
+    if (FoodFileManager::readFromInputFileIntoTable(foodFile, this->foodsTable) && DayManager::foodFileFunction(dayFile, this->daysTable))     {
         pressEnterToContinue();
         int menuOption = getMenuChoice();
         processMenuChoice(menuOption);

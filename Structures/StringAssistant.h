@@ -9,6 +9,9 @@
 
 #include "Food.h"
 #include "Day.h"
+#include <limits>
+#include <algorithm>
+
 class StringAssistant
 {
 private:

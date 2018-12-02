@@ -12,6 +12,7 @@
 #define FoodFileManager_h
 #include "HashTable.h"
 #include <fstream>
+#include <string>
 class FoodFileManager
 {
 private:
