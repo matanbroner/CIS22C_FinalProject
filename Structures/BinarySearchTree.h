@@ -23,7 +23,7 @@ private:
     // Find correct place to delete BSTNode with given root
     BSTNode<T>* removeInternal(BSTNode<T>*, BSTNode<T>*);
     // Traverses the BST with a given search value using a Binary Search method
-    BSTNode<T>* findNode(BSTNode<T>*, const T);
+    BSTNode<T>* findNode(BSTNode<T>*, T&);
     // Finds the correct BSTNode to replace the one being deleted, and deletes the given BSTNode
     BSTNode<T>* deleteNodeProperly(BSTNode<T>*);
     // Correctly reorganizes the tree to accomodate deletion of BSTNode with left and right active pointers
@@ -156,7 +156,7 @@ BSTNode<T>* BinarySearchTree<T>::removeInternal(BSTNode<T> *root, BSTNode<T> *no
 }
 
 template <typename T>
-BSTNode<T>* BinarySearchTree<T>::findNode(BSTNode<T> *root, const T dataToFind)
+BSTNode<T>* BinarySearchTree<T>::findNode(BSTNode<T> *root, T& dataToFind)
 {
     if (root != nullptr)
     {

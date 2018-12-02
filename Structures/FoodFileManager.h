@@ -6,6 +6,8 @@
 //  Copyright © 2018 Matan Broner. All rights reserved.
 //
 
+
+// add food by quantity
 #ifndef FoodFileManager_h
 #define FoodFileManager_h
 #include "HashTable.h"
