@@ -21,7 +21,7 @@ public:
     //static Stack removedDays;
     DayManager();
     ~DayManager();
-    static Day createNewDay(HashTable<Food>&);
+    static Day& createNewDay(HashTable<Food>&);
     static bool readFromDayFile(std::ifstream &input, BinarySearchTree<Day> &tree, HashTable<Day> &dayTable);
 };
 
@@ -49,7 +49,7 @@ bool DayManager::choice() {
     return ((answer == "y") || (answer == "yes")) ? true : false;
 }
 
-Day DayManager::createNewDay(HashTable<Food>& foodsPresent)
+Day& DayManager::createNewDay(HashTable<Food>& foodsPresent)
 {
     int date = ++mostRecentDate;
     List<Food> foodInputList;
