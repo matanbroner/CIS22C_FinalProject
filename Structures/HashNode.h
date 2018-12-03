@@ -14,60 +14,60 @@ template <typename T>
 class HashNode
 {
 private:
-    std::string key;
-    T data;
-    bool collisionFlag = false; // true if caused collision
-    
+	std::string key;
+	T data;
+	bool collisionFlag = false; // true if caused collision
+
 public:
-    HashNode(T&, std::string); // data and key
-    std::string getKey();
-    T& getData();
-    void setCollisionFlag(); // sets to true
-    bool collision();
-    
-    void print();
+	HashNode(T&, std::string); // data and key
+	std::string getKey();
+	T& getData();
+	void setCollisionFlag(); // sets to true
+	bool collision();
+
+	void print();
 };
 
 
 template <typename T>
 HashNode<T>::HashNode(T& givenData, std::string givenKey) : data(givenData)
 {
-    this->data = givenData;
-    this->key = givenKey;
+	this->data = givenData;
+	this->key = givenKey;
 }
 
 template <typename T>
 std::string HashNode<T>::getKey()
 {
-    return this->key;
+	return this->key;
 }
 
 template <typename T>
 T& HashNode<T>::getData()
 {
-    return this->data;
+	return this->data;
 }
 
 template <typename T>
 void HashNode<T>::setCollisionFlag()
 {
-    this->collisionFlag = true;
+	this->collisionFlag = true;
 }
 
 template <typename T>
 bool HashNode<T>::collision()
 {
-    return this->collisionFlag;
+	return this->collisionFlag;
 }
 
 template <typename T>
 void HashNode<T>::print()
 {
-    std::cout << "Key: " << this->key << " -- Data: " << this->data << std::endl;
+	std::cout << "Key: " << this->key << " -- Data: " << this->data << std::endl;
 }
 
 
 
 
 
-#endif /* HashNode_h */
+#endif /* HashNode_h */#pragma once
