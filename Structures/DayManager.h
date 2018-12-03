@@ -102,7 +102,6 @@ bool DayManager::readFromDayFile(std::ifstream &input, BinarySearchTree<Day> &tr
             getline(input, fat, ' ');
             getline(input, date);
             Day temp(std::stod(fat), std::stod(carb), std::stod(protein), std::stoi(date));
-            std::cout << temp << std::endl;
             tree.insert(temp);
             dayTable.insert(temp, date);
             if (temp.getDate() > mostRecentDate)
