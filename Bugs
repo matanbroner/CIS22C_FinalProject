@@ -4,8 +4,8 @@ Current Bugs (last updated 12/03)
 1. BST not sorted by calories upon first read --> Fixed by Matan 12/03
 2. Fix ASCII symbols of BST to show on Windows console
 3. Change system("clear") to "cls" --> Fixed by Matan 12/03
-4. Implement name formatter
-5. Write "Food Added" when food being created when adding foods
+4. Implement name formatter --> Fixed by Matan 12/03
+5. Write "Food Added" when food being created when adding foods --> Fixed by Matan 12/03
 6. Deleting a day not working right, also restoring from stack has derived issue from this error --> Fixed by Matan 12/03
 7. Fix hash table formatter (issue of setw and how Foods are printing) --> Fixed by Matan 12/03
 8. Look into Day Hash Table and why we have a hanging cursor - not printing all the way through --> Fixed by Matan 12/03
