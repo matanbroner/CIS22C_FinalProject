@@ -13,6 +13,7 @@
 class CentralApplication
 {
 private:
+    static bool needsSaving;
     std::string foodFile;
     std::string dayFile;
     HashTable<Food> foodsTable;
@@ -21,6 +22,7 @@ private:
     BinarySearchTree<Day> daysByCaloriesTree;
     DayManager dayManage;
     static std::string getFileAddress(std::string);
+    void saveToFiles();
     static int getMenuChoice();
     void processMenuChoice(int);
     int findByDate(Day&);
@@ -30,6 +32,8 @@ private:
 public:
     void menu();
 };
+
+bool CentralApplication::needsSaving = false;
 
 // main app functionality. All main menu UI and File IO should take place here
 
@@ -43,10 +47,10 @@ void CentralApplication::menu()
     std::ifstream foodFile, dayFile;
     this->foodFile = getFileAddress("Foods and Macronutrients");
     foodFile.open("/Users/matanbroner/Desktop/foods.txt");
-    dayFile.open(getFileAddress("Logged Days"));
+    this->dayFile = getFileAddress("Logged Days");
+    dayFile.open(this->dayFile);
     if (FoodFileManager::readFromInputFileIntoTable(foodFile, this->foodsTable) && dayManage.readFromDayFile(dayFile, this->daysByCaloriesTree, this->daysTable)) // will add DayFileManager file reader condition once present
     {
-        std::cout << "BOTH OPEN";
         pressEnterToContinue();
         while (menuOption != 0)
         {
@@ -84,13 +88,14 @@ int CentralApplication::getMenuChoice()
     std::cout << "[6] - Display Indneted BST of all logged days" << std::endl;
     std::cout << "[7] - List efficiency stats" << std::endl;
     std::cout << "[8] - Visualize logged days' calories vs. target consumption" << std::endl;
-    std::cout << "[9] - Undo last deletion of a day" << std::endl;
-    std::cout << "[10] - Add a new food to your database" << std::endl;
-    std::cout << "[11] - Save all changes" << std::endl;
+    std::cout << "[9] - Add more foods to current day" << std::endl;
+    std::cout << "[10] - Undo last deletion of a day" << std::endl;
+    std::cout << "[11] - Add a new food to your database" << std::endl;
+    std::cout << "[12] - Save all changes" << std::endl;
     std::cout << "[0] - Quit" << std::endl;
     std::cout << "--> ";
     std::cin >> choice;
-    while(std::cin.fail() || choice < 0 || choice > 10)
+    while(std::cin.fail() || choice < 0 || choice > 12)
     {
         StringAssistant::clearInput();
         std::cout << "*** Not a valid menu option! ***" << std::endl;
@@ -107,16 +112,17 @@ void CentralApplication::processMenuChoice(int choice)
     {
         case 1:
         {
-            Day newDay;
-            newDay = dayManage.createNewDay(this->foodsTable);
-            this->daysTable.insert(newDay, std::to_string(newDay.getDate()));
-            this->daysByCaloriesTree.insert(newDay);
+            dayManage.createNewDay(this->foodsTable, this->daysTable, this->daysByCaloriesTree);
+            needsSaving = true;
             break;
         }
         case 2:
         {
             if (removeDay())
+            {
+                needsSaving = true;
                 std::cout << "== Deletion was succesful ==" << std::endl;
+            }
             else std::cout << "== Given date was not found in this database ==" << std::endl;
             break;
         }
@@ -126,6 +132,7 @@ void CentralApplication::processMenuChoice(int choice)
             if (findByDate(temp))
                 temp.display();
             else std::cout << "== Given date was not found in this database ==" << std::endl;
+            break;
         }
         case 4: this->foodsTable.displayTable(); break;
         case 5: this->daysTable.displayTable(); break;
@@ -136,6 +143,16 @@ void CentralApplication::processMenuChoice(int choice)
             break;
         case 9:
         {
+            if(!this->dayManage.editCurrentDay(this->foodsTable, this->daysTable, this->daysByCaloriesTree))
+            {
+                std::cout << "You have no foods listed for today, creating a new day." << std::endl;
+                this->dayManage.createNewDay(this->foodsTable, this->daysTable, this->daysByCaloriesTree);
+            }
+            needsSaving = true;
+            break;
+        }
+        case 10:
+        {
             if (this->deletedDays.getStackCount() > 0)
             {
                 Day returnDay;
@@ -143,21 +160,31 @@ void CentralApplication::processMenuChoice(int choice)
                 this->daysByCaloriesTree.insert(returnDay);
                 this->daysTable.insert(returnDay, std::to_string(returnDay.getDate()));
                 std::cout << "Day [" << returnDay.getDate() << "] has been restored." << std::endl;
+                needsSaving = true;
             }
             else std::cout << "You have no days that have been deleted..." << std::endl;
             break;
         }
-        case 10:
+        case 11:
         {
             std::string newFoodName;
             std::cout << "Name of new food: ";
             getline(std::cin, newFoodName);
             Food newFood = FoodCreator::create(newFoodName);
-            this->foodsTable.insert(newFood, newFoodName);
+            this->foodsTable.insertFood(newFood, newFoodName);
+            std::cout << "'" << newFood.getName() << "' added to your available foods!" << std::endl;
+            needsSaving = true;
+        }
+        case 12:
+        {
+            this->saveToFiles();
+            needsSaving = false;
+            break;
         }
             break;
         case 0: quit();
     }
+    pressEnterToContinue();
 }
 
 bool CentralApplication::removeDay()
@@ -191,7 +218,7 @@ int CentralApplication::findByDate(Day& holder)
     while(std::cin.fail() || day < 1 || day > 100)
     {
         StringAssistant::clearInput();
-        std::cout << "*** Not a valid day for search! ***" << std::endl;
+        std::cout << "*** Not a valid day for search! ***\n--> " << std::endl;
         std::cin >> day;
     }
     return this->daysTable.search(std::to_string(day));
@@ -201,26 +228,36 @@ void CentralApplication::pressEnterToContinue()
 {
     std::cout << "Press ENTER to continue...";
     std::cin.get();
-    system("clear");
+    if (system( "cls" )) system( "clear" );
 }
-
 void CentralApplication::quit()
 {
     int choice;
-    std::cout << "Would you like to save all changes before quitting?" << std::endl;
-    std::cout << "[1] -- SAVE" << std::endl;
-    std::cout << "[2] -- QUIT WITHOUT SAVING\n--> " << std::endl;
-    std::cin >> choice;
-    while(std::cin.fail() || choice < 1 || choice > 2)
+    if (needsSaving)
     {
-        StringAssistant::clearInput();
-        std::cout << "*** Not a valid response! ***\n--> " << std::endl;
+        std::cout << "Would you like to save all changes before quitting?" << std::endl;
+        std::cout << "[1] -- SAVE" << std::endl;
+        std::cout << "[2] -- QUIT WITHOUT SAVING\n--> ";
         std::cin >> choice;
-    }
-    if (choice == 1)
-    {
-        std::ofstream outputFoods(this->foodFile, std::ofstream::out);
-        FoodFileManager::writeTableToInputFile(outputFoods, this->foodsTable);
+        while(std::cin.fail() || choice < 1 || choice > 2)
+        {
+            StringAssistant::clearInput();
+            std::cout << "*** Not a valid response! ***\n--> " << std::endl;
+            std::cin >> choice;
+        }
+        if (choice == 1)
+        {
+        this->saveToFiles();
+        }
     }
     std::cout << "Goodbye!" << std::endl;
+}
+
+void CentralApplication::saveToFiles()
+{
+    std::ofstream outputFoods(this->foodFile, std::ofstream::out);
+    std::ofstream outputDays(this->dayFile, std::ofstream::out);
+    FoodFileManager::writeTableToInputFile(outputFoods, this->foodsTable);
+    DayManager::writeToDataFile(outputDays, this->daysTable);
+    std::cout << "All changes have been saved!" << std::endl;
 }
