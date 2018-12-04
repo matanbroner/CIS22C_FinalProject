@@ -1,5 +1,5 @@
 Current Bugs (last updated 12/03)
-1. BST not sorted by calories upon first read
+1. BST not sorted by calories upon first read --> Fixed by Matan 12/03
 2. Fix ASCII symbols of BST to show on Windows console
 3. Change system("clear") to "cls"
 4. Implement name formatter
