@@ -139,8 +139,9 @@ void graphMenu(HashTable<Day>& daysTable)
                             do {
                                 if (currentWeek != numWeeks) {  //  display currentWeek
                                     for (int i = 1; i <= 7; i++) {
-                                        Day *temp = new Day(daysTable[i]->getData());
-                                        passToGraph[i] = daysTable[i]->getData().totalCal();
+                                        Day *temp = new Day(daysTable[daysTable.search(std::to_string(i))]->getData());
+                                        passToGraph[i] = temp->totalCal();
+                                        std::cout << temp->totalCal() << std::endl;
                                         delete temp;
                                     }
                                     system("cls||clear");
