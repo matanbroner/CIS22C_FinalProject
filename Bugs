@@ -1,6 +1,6 @@
 * Items that are listed as fixed may not yet be changed in the repo files.
 
-Current Bugs (last updated 12/03)
+Current Bugs:
 1. BST not sorted by calories upon first read --> Fixed by Matan 12/03
 2. Fix ASCII symbols of BST to show on Windows console
 3. Change system("clear") to "cls" --> Fixed by Matan 12/03
@@ -9,3 +9,9 @@ Current Bugs (last updated 12/03)
 6. Deleting a day not working right, also restoring from stack has derived issue from this error --> Fixed by Matan 12/03
 7. Fix hash table formatter (issue of setw and how Foods are printing) --> Fixed by Matan 12/03
 8. Look into Day Hash Table and why we have a hanging cursor - not printing all the way through --> Fixed by Matan 12/03
+
+Repo Files last updated: 12/03 at 10:47 pm --> All Bugs fixed except #2
+UPDATE: Verified all files work on VS as well, no bugs encountered thus far due to XCode
+
+Current Bugs:
+1. Fix ASCII symbols of BST to show on Windows console
