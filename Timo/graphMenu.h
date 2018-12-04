@@ -119,7 +119,7 @@ void graphMenu(HashTable<Day>& daysTable)
 			default:
 				option = 0;
 				break;
-			case 1:
+			case 1:  //  weekly views
 				system("cls||clear");
 				std::cout << "===================" << std::endl;
 				std::cout << "Weekly View Options" << std::endl;
@@ -136,7 +136,7 @@ void graphMenu(HashTable<Day>& daysTable)
 				default:
 					option = 0;
 					break;
-				case 1:
+				case 1:  //  calories
 					if (numWeeks > 1) {
 						currentWeek = 1;
 						do {
@@ -239,17 +239,370 @@ void graphMenu(HashTable<Day>& daysTable)
 						}
 						system("cls||clear");
 						graph::graph(passToGraph, tableSize);
+
+						std::cout << "Weekly view of week " << currentWeek << "/" << numWeeks << "\t"
+							<< "[0] Return" << std::endl;
+						std::cout << "--> ";
+						options = "0";
+						switch (getInt(options))
+						{
+						default:
+							option = 0;
+							break;
+						}
 					}
 					break;
-				case 2:
+				case 2:  //  fats
+					if (numWeeks > 1) {
+						currentWeek = 1;
+						do {
+							if (currentWeek != numWeeks) {  //  display currentWeek
+								for (int i = 0; i < 7; i++) {
+									Day *temp = new Day;
+									*temp = daysTable[i]->getData();
+									passToGraph[i] = temp->getFat();
+									delete temp;
+								}
+								system("cls||clear");
+								graph::graph(passToGraph, 7);
+
+								if (currentWeek != 1 && currentWeek != numWeeks) {
+									std::cout << "Weekly view of week " << currentWeek << "/" << numWeeks << "\t"
+										<< "[1] Next  "
+										<< "[2] Previous  "
+										<< "[0] Return" << std::endl;
+									std::cout << "--> ";
+									options = "012";
+									switch (getInt(options))
+									{
+									default:
+										option = 0;
+										break;
+									case 1:
+										currentWeek++;
+										break;
+									case 2:
+										currentWeek--;
+										break;
+									}
+								}
+								else if (currentWeek == 1) {  //  first week, can only view next
+									std::cout << "Weekly view of week " << currentWeek << "/" << numWeeks << "\t"
+										<< "[1] Next  "
+										<< "[0] Return" << std::endl;
+									std::cout << "--> ";
+									options = "01";
+									switch (getInt(options))
+									{
+									default:
+										option = 0;
+										break;
+									case 1:
+										currentWeek++;
+										break;
+									}
+								}
+								else {  //  last week, can only view previous
+									std::cout << "Weekly view of week " << currentWeek << "/" << numWeeks << "\t"
+										<< "[2] Previous  "
+										<< "[0] Return" << std::endl;
+									std::cout << "--> ";
+									options = "02";
+									switch (getInt(options))
+									{
+									default:
+										option = 0;
+										break;
+									case 2:
+										currentWeek--;
+										break;
+									}
+								}
+							}
+							else {  //  display last week
+								for (int i = 0; i < daysInFinalWeek; i++) {
+									Day *temp = new Day;
+									*temp = daysTable[i]->getData();
+									passToGraph[i] = temp->getFat();
+									delete temp;
+								}
+								system("cls||clear");
+								graph::graph(passToGraph, daysInFinalWeek);
+
+								std::cout << "Weekly view of week " << currentWeek << "/" << numWeeks << "\t"
+									<< "[2] Previous  "
+									<< "[0] Return" << std::endl;
+								std::cout << "--> ";
+								options = "02";
+								switch (getInt(options))
+								{
+								default:
+									option = 0;
+									break;
+								case 2:
+									currentWeek--;
+									break;
+								}
+							}
+						} while (option != 0);
+					}
+					else {
+						for (int i = 0; i < tableSize; i++) {
+							Day *temp = new Day;
+							*temp = daysTable[i]->getData();
+							passToGraph[i] = temp->getFat();
+							delete temp;
+						}
+						system("cls||clear");
+						graph::graph(passToGraph, tableSize);
+
+						std::cout << "Weekly view of week " << currentWeek << "/" << numWeeks << "\t"
+							<< "[0] Return" << std::endl;
+						std::cout << "--> ";
+						options = "0";
+						switch (getInt(options))
+						{
+						default:
+							option = 0;
+							break;
+						}
+					}
 					break;
-				case 3:
+				case 3:  //  carbs
+					if (numWeeks > 1) {
+						currentWeek = 1;
+						do {
+							if (currentWeek != numWeeks) {  //  display currentWeek
+								for (int i = 0; i < 7; i++) {
+									Day *temp = new Day;
+									*temp = daysTable[i]->getData();
+									passToGraph[i] = temp->getCarb();
+									delete temp;
+								}
+								system("cls||clear");
+								graph::graph(passToGraph, 7);
+
+								if (currentWeek != 1 && currentWeek != numWeeks) {
+									std::cout << "Weekly view of week " << currentWeek << "/" << numWeeks << "\t"
+										<< "[1] Next  "
+										<< "[2] Previous  "
+										<< "[0] Return" << std::endl;
+									std::cout << "--> ";
+									options = "012";
+									switch (getInt(options))
+									{
+									default:
+										option = 0;
+										break;
+									case 1:
+										currentWeek++;
+										break;
+									case 2:
+										currentWeek--;
+										break;
+									}
+								}
+								else if (currentWeek == 1) {  //  first week, can only view next
+									std::cout << "Weekly view of week " << currentWeek << "/" << numWeeks << "\t"
+										<< "[1] Next  "
+										<< "[0] Return" << std::endl;
+									std::cout << "--> ";
+									options = "01";
+									switch (getInt(options))
+									{
+									default:
+										option = 0;
+										break;
+									case 1:
+										currentWeek++;
+										break;
+									}
+								}
+								else {  //  last week, can only view previous
+									std::cout << "Weekly view of week " << currentWeek << "/" << numWeeks << "\t"
+										<< "[2] Previous  "
+										<< "[0] Return" << std::endl;
+									std::cout << "--> ";
+									options = "02";
+									switch (getInt(options))
+									{
+									default:
+										option = 0;
+										break;
+									case 2:
+										currentWeek--;
+										break;
+									}
+								}
+							}
+							else {  //  display last week
+								for (int i = 0; i < daysInFinalWeek; i++) {
+									Day *temp = new Day;
+									*temp = daysTable[i]->getData();
+									passToGraph[i] = temp->getCarb();
+									delete temp;
+								}
+								system("cls||clear");
+								graph::graph(passToGraph, daysInFinalWeek);
+
+								std::cout << "Weekly view of week " << currentWeek << "/" << numWeeks << "\t"
+									<< "[2] Previous  "
+									<< "[0] Return" << std::endl;
+								std::cout << "--> ";
+								options = "02";
+								switch (getInt(options))
+								{
+								default:
+									option = 0;
+									break;
+								case 2:
+									currentWeek--;
+									break;
+								}
+							}
+						} while (option != 0);
+					}
+					else {
+						for (int i = 0; i < tableSize; i++) {
+							Day *temp = new Day;
+							*temp = daysTable[i]->getData();
+							passToGraph[i] = temp->getCarb();
+							delete temp;
+						}
+						system("cls||clear");
+						graph::graph(passToGraph, tableSize);
+
+						std::cout << "Weekly view of week " << currentWeek << "/" << numWeeks << "\t"
+							<< "[0] Return" << std::endl;
+						std::cout << "--> ";
+						options = "0";
+						switch (getInt(options))
+						{
+						default:
+							option = 0;
+							break;
+						}
+					}
 					break;
-				case 4:
+				case 4:  //  proteins
+					if (numWeeks > 1) {
+						currentWeek = 1;
+						do {
+							if (currentWeek != numWeeks) {  //  display currentWeek
+								for (int i = 0; i < 7; i++) {
+									Day *temp = new Day;
+									*temp = daysTable[i]->getData();
+									passToGraph[i] = temp->getProt();
+									delete temp;
+								}
+								system("cls||clear");
+								graph::graph(passToGraph, 7);
+
+								if (currentWeek != 1 && currentWeek != numWeeks) {
+									std::cout << "Weekly view of week " << currentWeek << "/" << numWeeks << "\t"
+										<< "[1] Next  "
+										<< "[2] Previous  "
+										<< "[0] Return" << std::endl;
+									std::cout << "--> ";
+									options = "012";
+									switch (getInt(options))
+									{
+									default:
+										option = 0;
+										break;
+									case 1:
+										currentWeek++;
+										break;
+									case 2:
+										currentWeek--;
+										break;
+									}
+								}
+								else if (currentWeek == 1) {  //  first week, can only view next
+									std::cout << "Weekly view of week " << currentWeek << "/" << numWeeks << "\t"
+										<< "[1] Next  "
+										<< "[0] Return" << std::endl;
+									std::cout << "--> ";
+									options = "01";
+									switch (getInt(options))
+									{
+									default:
+										option = 0;
+										break;
+									case 1:
+										currentWeek++;
+										break;
+									}
+								}
+								else {  //  last week, can only view previous
+									std::cout << "Weekly view of week " << currentWeek << "/" << numWeeks << "\t"
+										<< "[2] Previous  "
+										<< "[0] Return" << std::endl;
+									std::cout << "--> ";
+									options = "02";
+									switch (getInt(options))
+									{
+									default:
+										option = 0;
+										break;
+									case 2:
+										currentWeek--;
+										break;
+									}
+								}
+							}
+							else {  //  display last week
+								for (int i = 0; i < daysInFinalWeek; i++) {
+									Day *temp = new Day;
+									*temp = daysTable[i]->getData();
+									passToGraph[i] = temp->getProt();
+									delete temp;
+								}
+								system("cls||clear");
+								graph::graph(passToGraph, daysInFinalWeek);
+
+								std::cout << "Weekly view of week " << currentWeek << "/" << numWeeks << "\t"
+									<< "[2] Previous  "
+									<< "[0] Return" << std::endl;
+								std::cout << "--> ";
+								options = "02";
+								switch (getInt(options))
+								{
+								default:
+									option = 0;
+									break;
+								case 2:
+									currentWeek--;
+									break;
+								}
+							}
+						} while (option != 0);
+					}
+					else {
+						for (int i = 0; i < tableSize; i++) {
+							Day *temp = new Day;
+							*temp = daysTable[i]->getData();
+							passToGraph[i] = temp->getProt();
+							delete temp;
+						}
+						system("cls||clear");
+						graph::graph(passToGraph, tableSize);
+
+						std::cout << "Weekly view of week " << currentWeek << "/" << numWeeks << "\t"
+							<< "[0] Return" << std::endl;
+						std::cout << "--> ";
+						options = "0";
+						switch (getInt(options))
+						{
+						default:
+							option = 0;
+							break;
+						}
+					}
 					break;
 				}
 				break;
-			case 2:
+			case 2:  //  weekly averages
 				system("cls||clear");
 
 				if (numWeeks == 1) {
@@ -275,13 +628,72 @@ void graphMenu(HashTable<Day>& daysTable)
 					default:
 						option = 0;
 						break;
-					case 1:
+					case 1:  //  calories
+						do {
+							option = 0;
+							for (int i = 1; i <= numWeeks; i++) {
+								passToGraph[i] = 0;
+								if (i != numWeeks) {
+									for (int j = (i - 1) * 7; j < ((i - 1) * 7 + 7); j++) {
+										Day* temp = new Day;
+										*temp = daysTable[j]->getData();
+										passToGraph[i] += temp->totalCal();
+										delete temp;
+									}
+									passToGraph[i] /= 7;  //  divide by days to get average
+								}
+								else {  //  we are at lastWeek, and need to divide by something less than 7
+									for (int j = (i - 1) * 7; j < ((i - 1) * 7 + daysInFinalWeek); j++) {
+										Day* temp = new Day;
+										*temp = daysTable[j]->getData();
+										passToGraph[i] += temp->totalCal();
+										delete temp;
+									}
+									passToGraph[i] /= daysInFinalWeek;  //  divide by days to get average
+								}
+							}
+
+							if (numWeeks <= 7) {
+								system("cls||clear");
+								graph::graph(passToGraph, numWeeks);
+								std::cout << "Average view of Calories" << "\t"
+									<< "[0] Return" << std::endl;
+								std::cout << "--> ";
+								options = "0";
+								switch (getInt(options))
+								{
+								default:
+									option = 0;
+									break;
+								}
+							}
+							else {
+								system("cls||clear");
+								graph::graph(passToGraph, numWeeks);
+								std::cout << "Average view of Calories" << "\t"
+									<< "[1] Next [0] Return" << std::endl;
+								std::cout << "--> ";
+
+								currentWeek = 7;
+								do {
+									option = 0;
+									
+									if (currentWeek <= 7) {}  //  first page
+									else if (numWeeks - currentWeek <= 7) {}  //  at final page
+									else {}  //  at a middle page
+
+
+								} while (option != 0);
+							}
+
+
+						} while (option != 0);
 						break;
-					case 2:
+					case 2:  //  fats
 						break;
-					case 3:
+					case 3:  //  carbs
 						break;
-					case 4:
+					case 4:  //  proteins
 						break;
 					}
 				}

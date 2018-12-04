@@ -49,3 +49,4 @@ View cal/fat/carb/prot by week ( requires at least 1 day )
 current graph wip
 =================
 View average weekly cal/fat/carb/prot ( requires at least 8 days )
+need to finish pagination and then copy paste everything
