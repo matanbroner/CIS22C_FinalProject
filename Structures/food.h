@@ -1,82 +1,122 @@
+
 #ifndef FOOD_H
 #define FOOD_H
 #include <string>
+#include <sstream>
 #include <iostream>
 
 class Food {
 private:
-	const int pVal = 4, cVal = 4, fVal = 9;
-	unsigned int pKey;
-	int protein, carb, fat;
-	std::string name;
+    const int pVal = 4, cVal = 4, fVal = 9;
+    unsigned int pKey;
+    double protein, carb, fat, quantity;
+    std::string unit;
+    std::string name;
 public:
-	Food();
-	Food(const Food &copy);
-	Food(int p, int c, int f, std::string n);
-	~Food();
-	int getProtein();
-	int getCarb();
-	int getFat();
-	int getCal();
-	Food operator= (const Food &right);
-	bool operator< (Food &right);
-	bool operator== (Food &right);
-	bool operator<= (Food &right);
-	friend std::ostream& operator<< (std::ostream &out, const Food &food);
+    Food();
+    Food(const Food &copy);
+    Food(std::string n, double p, double c, double f);
+    Food(std::string n, double p, double c, double f, double, std::string);
+    ~Food();
+    std::string getName();
+    double getProtein();
+    double getCarb();
+    double getFat();
+    double getCal();
+    double getQuantity();
+    std::string getUnit();
+    void printFoodWithMacros();
+    Food operator= (const Food &right);
+    bool operator< (Food &right);
+    bool operator== (Food &right);
+    bool operator<= (Food &right);
+    friend std::ostream& operator<< (std::ostream &out, Food &food);
 };
 
-Food::Food() :
-	protein(1),
-	carb(1),
-	fat(1),
-	name("normal")
-{}
 
-Food::Food(const Food &copy) {
-	protein = copy.protein;
-	carb = copy.carb;
-	fat = copy.fat;
-	name = copy.name;
+Food::Food()
+{
+    this->protein = this->carb = this->fat = 0;
+    this->name = "***";
 }
 
-Food::Food(int p, int c, int f, std::string n) :
-	protein(p),
-	carb(c),
-	fat(f),
-	name(n)
+Food::Food(const Food &copy) {
+    this->protein = copy.protein;
+    this->carb = copy.carb;
+    this->fat = copy.fat;
+    this->name = copy.name;
+    this->unit = copy.unit;
+    this->quantity = copy.quantity;
+}
+
+Food::Food(std::string n, double c, double f, double p) :
+protein(p),
+carb(c),
+fat(f),
+name(n)
+{
+    this->quantity = 1;
+    this->unit = "unit";
+}
+
+Food::Food(std::string n, double c, double f, double p, double q, std::string u) :
+name(n), protein(p), carb(c), fat(f), quantity(q), unit(u)
 {}
 
 Food::~Food() {}
 
-int Food::getProtein() {
-	return protein;
+std::string Food::getName(){
+    return this->name;
 }
-int Food::getCarb() {
-	return carb;
+
+double Food::getProtein() {
+    return protein;
 }
-int Food::getFat() {
-	return fat;
+double Food::getCarb() {
+    return carb;
 }
-int Food::getCal() {
-	return ((protein * pVal) + (carb * cVal) + (fat * fVal));
+double Food::getFat() {
+    return fat;
+}
+double Food::getCal() {
+    return ((protein * pVal) + (carb * cVal) + (fat * fVal));
+}
+double Food::getQuantity()
+{
+    return this->quantity;
+}
+std::string Food::getUnit()
+{
+    return this->unit;
 }
 Food Food::operator= (const Food &right) {
-	return Food(right);
+    this->name = right.name;
+    this->protein = right.protein; this->carb = right.carb; this->fat = right.fat;
+    return right;
 }
 bool Food::operator< (Food &right) {
-	return (getCal() < right.getCal());
+    return (getCal() < right.getCal());
 }
 bool Food::operator== (Food &right) {
-	return (getCal() == right.getCal());
+    return (getCal() == right.getCal());
 }
 bool Food::operator<= (Food &right) {
-	return (getCal() <= right.getCal());
+    return (getCal() <= right.getCal());
 }
-std::ostream& operator<< (std::ostream &out, const Food &food) {
-	out << food.name << ", "
-		<< "f: " << food.fat << ", "
-		<< "c: " << food.carb << ", "
-		<< "p: " << food.protein << std::endl;
-	return out;
+std::ostream& operator<< (std::ostream &out, Food &food) {
+    double calories = food.getCal();
+    std::string formatted;
+    if (food.getName().length() > 15)
+        formatted = food.getName().substr(0, 15) + "...:" + std::to_string((int)calories) + " kC";
+    else formatted = food.getName() + ": " + std::to_string((int)calories) + " kC";
+    out << formatted;
+    return out;
+}
+void Food::printFoodWithMacros()
+{
+    std::cout << this->name << ", "
+    << "f: " << this->fat << ", "
+    << "c: " << this->carb << ", "
+    << "p: " << this->protein << " (" << this->quantity << " " << this->unit << ")";
 }
 #endif 
