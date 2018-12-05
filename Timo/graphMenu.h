@@ -30,8 +30,10 @@ int getInt(const std::string options)
 {
 	int input = 0;
 	bool error = false;
+	bool loop = true;
 
 	do {
+		loop = true;
 		error = false;
 		try {
 			std::cin >> input;
@@ -45,11 +47,11 @@ int getInt(const std::string options)
 				for (int i = 0; i < options.size(); i++) {
 					if (input == (int(options[i]) - 48)) {
 						error = false;
+						loop = false;
 						return input;
 					}
 					else {
 						error = true;
-
 					}
 				}
 			}
@@ -57,13 +59,19 @@ int getInt(const std::string options)
 		catch (const std::exception& ex) {
 //			system("cls||clear");
 			std::cout << ex.what() << std::endl;
+			std::cout << "--> ";
+			error = false;
 		}
 		catch (...) {
 			system("cls||clear");
 			std::cout << "Unknown error occurred" << std::endl;
+			error = false;
 		};
-
-	} while (error == true);
+		if (error == true) {
+			std::cout << "Input out of range. Please try again." << std::endl;
+			std::cout << "--> ";
+		}
+	} while (loop == true);
 
 	return 0;
 }
@@ -76,8 +84,12 @@ void graphMenu(HashTable<Day>& daysTable)
 	int tableSize = daysTable.getCount();
 	int currentWeek = 1;
 
+	std::cout << tableSize << std::endl;
+	int test = ceil(double(double(tableSize) / 7));
+	std::cout << test << std::endl;
+
 	if (tableSize > 7) {
-		numWeeks = ceil(tableSize / 7);
+		numWeeks = ceil( double(tableSize / 7));
 		daysInFinalWeek = tableSize % 7;
 	}
 	else if (tableSize == 7) {
@@ -112,7 +124,8 @@ void graphMenu(HashTable<Day>& daysTable)
 		}
 
 		do {
-			//system("cls||clear");
+			
+			system("cls||clear");
 			std::cout << "==================" << std::endl;
 			std::cout << "Graph Menu Options" << std::endl;
 			std::cout << "==================" << std::endl;
@@ -1068,7 +1081,7 @@ void graphMenu(HashTable<Day>& daysTable)
 
 	 delete passToGraph;
 	 delete tableArray;
-//	 system("cls||clear");
+	 system("cls||clear");
 }  //  end graphMenu function
 
 #endif
