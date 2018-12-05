@@ -7,8 +7,6 @@ Graph menu is a menu that interacts with a HashTable<Day> object to display bar 
 
 Current functionality:
 View cal/fat/carb/prot by week ( requires at least 1 day )
-
-Current wip:
 View average weekly cal/fat/carb/prot ( requires at least 8 days )
 */
 
@@ -96,6 +94,7 @@ void graphMenu(HashTable<Day>& daysTable)
 	}
 
 	//  start menu loop
+	int quit = 0;
 	int option = 0;
 	std::string options = "";
 
@@ -103,8 +102,6 @@ void graphMenu(HashTable<Day>& daysTable)
 
 	if (tableSize > 0) {  //  require at least one day
 		do {
-			option = 0;  //  just in case
-
 			system("cls||clear");
 			std::cout << "==================" << std::endl;
 			std::cout << "Graph Menu Options" << std::endl;
@@ -114,10 +111,10 @@ void graphMenu(HashTable<Day>& daysTable)
 			std::cout << "[0] - Return to previous Menu" << std::endl;
 			std::cout << "--> ";
 			options = "012";
-			switch (getInt(options))
+			quit = getInt(options);
+			switch (quit)
 			{
 			default:
-				option = 0;
 				break;
 			case 1:  //  weekly views
 				system("cls||clear");
@@ -140,6 +137,7 @@ void graphMenu(HashTable<Day>& daysTable)
 					if (numWeeks > 1) {
 						currentWeek = 1;
 						do {
+							option = 1;
 							if (currentWeek != numWeeks) {  //  display currentWeek
 								for (int i = 0; i < 7; i++) {
 									Day *temp = new Day;
@@ -244,18 +242,14 @@ void graphMenu(HashTable<Day>& daysTable)
 							<< "[0] Return" << std::endl;
 						std::cout << "--> ";
 						options = "0";
-						switch (getInt(options))
-						{
-						default:
-							option = 0;
-							break;
-						}
+						option = getInt(options);
 					}
 					break;
 				case 2:  //  fats
 					if (numWeeks > 1) {
 						currentWeek = 1;
 						do {
+							option = 1;
 							if (currentWeek != numWeeks) {  //  display currentWeek
 								for (int i = 0; i < 7; i++) {
 									Day *temp = new Day;
@@ -360,18 +354,14 @@ void graphMenu(HashTable<Day>& daysTable)
 							<< "[0] Return" << std::endl;
 						std::cout << "--> ";
 						options = "0";
-						switch (getInt(options))
-						{
-						default:
-							option = 0;
-							break;
-						}
+						option = getInt(options);
 					}
 					break;
 				case 3:  //  carbs
 					if (numWeeks > 1) {
 						currentWeek = 1;
 						do {
+							option = 1;
 							if (currentWeek != numWeeks) {  //  display currentWeek
 								for (int i = 0; i < 7; i++) {
 									Day *temp = new Day;
@@ -476,18 +466,14 @@ void graphMenu(HashTable<Day>& daysTable)
 							<< "[0] Return" << std::endl;
 						std::cout << "--> ";
 						options = "0";
-						switch (getInt(options))
-						{
-						default:
-							option = 0;
-							break;
-						}
+						option = getInt(options);
 					}
 					break;
 				case 4:  //  proteins
 					if (numWeeks > 1) {
 						currentWeek = 1;
 						do {
+							option = 1;
 							if (currentWeek != numWeeks) {  //  display currentWeek
 								for (int i = 0; i < 7; i++) {
 									Day *temp = new Day;
@@ -592,24 +578,22 @@ void graphMenu(HashTable<Day>& daysTable)
 							<< "[0] Return" << std::endl;
 						std::cout << "--> ";
 						options = "0";
-						switch (getInt(options))
-						{
-						default:
-							option = 0;
-							break;
-						}
+						option = getInt(options);
 					}
 					break;
 				}
 				break;
 			case 2:  //  weekly averages
+				option = 1;
 				system("cls||clear");
 
 				if (numWeeks == 1) {
 					std::cout << "There are not enough days to display weekly averages.\n"
 						<< "Please ensure there are more than 7 days.\n";
-					std::cout << "Press ENTER to continue...";
-					std::cin.get();
+					std::cout << "Type 0 to continue..." << std::endl;
+					std::cout << "--> ";
+					options = "0";
+					getInt(options);
 					break;
 				}
 				else {
@@ -629,11 +613,25 @@ void graphMenu(HashTable<Day>& daysTable)
 						option = 0;
 						break;
 					case 1:  //  calories
+						currentWeek = 7;  //  start with first page, then ask for others
 						do {
-							option = 0;
-							for (int i = 1; i <= numWeeks; i++) {
-								passToGraph[i] = 0;
-								if (i != numWeeks) {
+							option = 1;
+
+							//  start position is one week before current week
+							//  unless numWeeks < currentWeek
+							//  end position is currentWeek
+							int i = 0;
+							if (numWeeks < currentWeek) {
+								i = numWeeks - ( 7 - (currentWeek - numWeeks) );
+							}
+							else {
+								i = currentWeek - 7;
+							}
+
+
+							for (i;  i < currentWeek; i++) {
+								passToGraph[i] = 0;  //  start at 0, add each day, then divide for average
+								if (i != numWeeks-1) {
 									for (int j = (i - 1) * 7; j < ((i - 1) * 7 + 7); j++) {
 										Day* temp = new Day;
 										*temp = daysTable[j]->getData();
@@ -653,53 +651,340 @@ void graphMenu(HashTable<Day>& daysTable)
 								}
 							}
 
-							if (numWeeks <= 7) {
+							if (numWeeks <= 7) {  //  there is only one page--display and wait until input for return
 								system("cls||clear");
 								graph::graph(passToGraph, numWeeks);
 								std::cout << "Average view of Calories" << "\t"
 									<< "[0] Return" << std::endl;
 								std::cout << "--> ";
 								options = "0";
-								switch (getInt(options))
-								{
-								default:
-									option = 0;
-									break;
-								}
+								option = getInt(options);
 							}
 							else {
 								system("cls||clear");
 								graph::graph(passToGraph, numWeeks);
-								std::cout << "Average view of Calories" << "\t"
-									<< "[1] Next [0] Return" << std::endl;
-								std::cout << "--> ";
 
-								currentWeek = 7;
 								do {
-									option = 0;
-									
-									if (currentWeek <= 7) {}  //  first page
-									else if (numWeeks - currentWeek <= 7) {}  //  at final page
-									else {}  //  at a middle page
+									option = 1;			
+									if (currentWeek <= 7) {  //  first page
+										std::cout << "Average view of Calories" << "\t"
+											<< "[0] Return" << std::endl;
+										std::cout << "--> ";
+										options = "0";
+									}
+									else if (numWeeks - currentWeek <= 7) {  //  at final page
+										std::cout << "Average view of Calories" << "\t"
+											<< "[2] Previous  "
+											<< "[0] Return" << std::endl;
+										std::cout << "--> ";
+										options = "02";
+									}
+									else {  //  at a middle page
+										std::cout << "Average view of Calories" << "\t"
+											<< "[1] Next  "
+											<< "[2] Previous  "
+											<< "[0] Return" << std::endl;
+										std::cout << "--> ";
+										options = "012";
+									}
 
+									switch (getInt(options)) {
+									default:  //  return to prev menu
+										option = 0;
+										break;
+									case 1:  //  next page
+										currentWeek += 7;
+										break;
+									case 2:  //  previous page
+										currentWeek -= 7;
+										break;
+									}
 
 								} while (option != 0);
 							}
+						} while (option != 0);
+						break;  //  end case for average calories
+					case 2:  //  fats
+						currentWeek = 7;  //  start with first page, then ask for others
+						do {
+							option = 1;
+
+							//  start position is one week before current week
+							//  unless numWeeks < currentWeek
+							//  end position is currentWeek
+							int i = 0;
+							if (numWeeks < currentWeek) {
+								i = numWeeks - (7 - (currentWeek - numWeeks));
+							}
+							else {
+								i = currentWeek - 7;
+							}
 
 
+							for (i; i < currentWeek; i++) {
+								passToGraph[i] = 0;  //  start at 0, add each day, then divide for average
+								if (i != numWeeks - 1) {
+									for (int j = (i - 1) * 7; j < ((i - 1) * 7 + 7); j++) {
+										Day* temp = new Day;
+										*temp = daysTable[j]->getData();
+										passToGraph[i] += temp->getFat();
+										delete temp;
+									}
+									passToGraph[i] /= 7;  //  divide by days to get average
+								}
+								else {  //  we are at lastWeek, and need to divide by something less than 7
+									for (int j = (i - 1) * 7; j < ((i - 1) * 7 + daysInFinalWeek); j++) {
+										Day* temp = new Day;
+										*temp = daysTable[j]->getData();
+										passToGraph[i] += temp->getFat();
+										delete temp;
+									}
+									passToGraph[i] /= daysInFinalWeek;  //  divide by days to get average
+								}
+							}
+
+							if (numWeeks <= 7) {  //  there is only one page--display and wait until input for return
+								system("cls||clear");
+								graph::graph(passToGraph, numWeeks);
+								std::cout << "Average view of Fats" << "\t"
+									<< "[0] Return" << std::endl;
+								std::cout << "--> ";
+								options = "0";
+								option = getInt(options);
+							}
+							else {
+								system("cls||clear");
+								graph::graph(passToGraph, numWeeks);
+
+								do {
+									option = 1;
+									if (currentWeek <= 7) {  //  first page
+										std::cout << "Average view of Fats" << "\t"
+											<< "[0] Return" << std::endl;
+										std::cout << "--> ";
+										options = "0";
+									}
+									else if (numWeeks - currentWeek <= 7) {  //  at final page
+										std::cout << "Average view of Fats" << "\t"
+											<< "[2] Previous  "
+											<< "[0] Return" << std::endl;
+										std::cout << "--> ";
+										options = "02";
+									}
+									else {  //  at a middle page
+										std::cout << "Average view of Fats" << "\t"
+											<< "[1] Next  "
+											<< "[2] Previous  "
+											<< "[0] Return" << std::endl;
+										std::cout << "--> ";
+										options = "012";
+									}
+
+									switch (getInt(options)) {
+									default:  //  return to prev menu
+										option = 0;
+										break;
+									case 1:  //  next page
+										currentWeek += 7;
+										break;
+									case 2:  //  previous page
+										currentWeek -= 7;
+										break;
+									}
+
+								} while (option != 0);
+							}
 						} while (option != 0);
 						break;
-					case 2:  //  fats
-						break;
 					case 3:  //  carbs
+						currentWeek = 7;  //  start with first page, then ask for others
+						do {
+							option = 1;
+
+							//  start position is one week before current week
+							//  unless numWeeks < currentWeek
+							//  end position is currentWeek
+							int i = 0;
+							if (numWeeks < currentWeek) {
+								i = numWeeks - (7 - (currentWeek - numWeeks));
+							}
+							else {
+								i = currentWeek - 7;
+							}
+
+
+							for (i; i < currentWeek; i++) {
+								passToGraph[i] = 0;  //  start at 0, add each day, then divide for average
+								if (i != numWeeks - 1) {
+									for (int j = (i - 1) * 7; j < ((i - 1) * 7 + 7); j++) {
+										Day* temp = new Day;
+										*temp = daysTable[j]->getData();
+										passToGraph[i] += temp->getCarb();
+										delete temp;
+									}
+									passToGraph[i] /= 7;  //  divide by days to get average
+								}
+								else {  //  we are at lastWeek, and need to divide by something less than 7
+									for (int j = (i - 1) * 7; j < ((i - 1) * 7 + daysInFinalWeek); j++) {
+										Day* temp = new Day;
+										*temp = daysTable[j]->getData();
+										passToGraph[i] += temp->getCarb();
+										delete temp;
+									}
+									passToGraph[i] /= daysInFinalWeek;  //  divide by days to get average
+								}
+							}
+
+							if (numWeeks <= 7) {  //  there is only one page--display and wait until input for return
+								system("cls||clear");
+								graph::graph(passToGraph, numWeeks);
+								std::cout << "Average view of Carbs" << "\t"
+									<< "[0] Return" << std::endl;
+								std::cout << "--> ";
+								options = "0";
+								option = getInt(options);
+							}
+							else {
+								system("cls||clear");
+								graph::graph(passToGraph, numWeeks);
+
+								do {
+									option = 1;
+									if (currentWeek <= 7) {  //  first page
+										std::cout << "Average view of Carbs" << "\t"
+											<< "[0] Return" << std::endl;
+										std::cout << "--> ";
+										options = "0";
+									}
+									else if (numWeeks - currentWeek <= 7) {  //  at final page
+										std::cout << "Average view of Carbs" << "\t"
+											<< "[2] Previous  "
+											<< "[0] Return" << std::endl;
+										std::cout << "--> ";
+										options = "02";
+									}
+									else {  //  at a middle page
+										std::cout << "Average view of Carbs" << "\t"
+											<< "[1] Next  "
+											<< "[2] Previous  "
+											<< "[0] Return" << std::endl;
+										std::cout << "--> ";
+										options = "012";
+									}
+
+									switch (getInt(options)) {
+									default:  //  return to prev menu
+										option = 0;
+										break;
+									case 1:  //  next page
+										currentWeek += 7;
+										break;
+									case 2:  //  previous page
+										currentWeek -= 7;
+										break;
+									}
+
+								} while (option != 0);
+							}
+						} while (option != 0);
 						break;
 					case 4:  //  proteins
+						currentWeek = 7;  //  start with first page, then ask for others
+						do {
+							option = 1;
+
+							//  start position is one week before current week
+							//  unless numWeeks < currentWeek
+							//  end position is currentWeek
+							int i = 0;
+							if (numWeeks < currentWeek) {
+								i = numWeeks - (7 - (currentWeek - numWeeks));
+							}
+							else {
+								i = currentWeek - 7;
+							}
+
+
+							for (i; i < currentWeek; i++) {
+								passToGraph[i] = 0;  //  start at 0, add each day, then divide for average
+								if (i != numWeeks - 1) {
+									for (int j = (i - 1) * 7; j < ((i - 1) * 7 + 7); j++) {
+										Day* temp = new Day;
+										*temp = daysTable[j]->getData();
+										passToGraph[i] += temp->getProt();
+										delete temp;
+									}
+									passToGraph[i] /= 7;  //  divide by days to get average
+								}
+								else {  //  we are at lastWeek, and need to divide by something less than 7
+									for (int j = (i - 1) * 7; j < ((i - 1) * 7 + daysInFinalWeek); j++) {
+										Day* temp = new Day;
+										*temp = daysTable[j]->getData();
+										passToGraph[i] += temp->getProt();
+										delete temp;
+									}
+									passToGraph[i] /= daysInFinalWeek;  //  divide by days to get average
+								}
+							}
+
+							if (numWeeks <= 7) {  //  there is only one page--display and wait until input for return
+								system("cls||clear");
+								graph::graph(passToGraph, numWeeks);
+								std::cout << "Average view of Proteins" << "\t"
+									<< "[0] Return" << std::endl;
+								std::cout << "--> ";
+								options = "0";
+								option = getInt(options);
+							}
+							else {
+								system("cls||clear");
+								graph::graph(passToGraph, numWeeks);
+
+								do {
+									option = 1;
+									if (currentWeek <= 7) {  //  first page
+										std::cout << "Average view of Proteins" << "\t"
+											<< "[0] Return" << std::endl;
+										std::cout << "--> ";
+										options = "0";
+									}
+									else if (numWeeks - currentWeek <= 7) {  //  at final page
+										std::cout << "Average view of Proteins" << "\t"
+											<< "[2] Previous  "
+											<< "[0] Return" << std::endl;
+										std::cout << "--> ";
+										options = "02";
+									}
+									else {  //  at a middle page
+										std::cout << "Average view of Proteins" << "\t"
+											<< "[1] Next  "
+											<< "[2] Previous  "
+											<< "[0] Return" << std::endl;
+										std::cout << "--> ";
+										options = "012";
+									}
+
+									switch (getInt(options)) {
+									default:  //  return to prev menu
+										option = 0;
+										break;
+									case 1:  //  next page
+										currentWeek += 7;
+										break;
+									case 2:  //  previous page
+										currentWeek -= 7;
+										break;
+									}
+
+								} while (option != 0);
+							}
+						} while (option != 0);
 						break;
 					}
 				}
 				break;
 			}
-		} while (option != 0);
+		} while (quit != 0);
 	}
 	 else {
 		 system("cls||clear");
@@ -708,6 +993,7 @@ void graphMenu(HashTable<Day>& daysTable)
 			 << "Press ENTER to continue...";
 		 std::cin.get();
 	}
+//	 system("cls||clear");
 }  //  end graphMenu function
 
 #endif
