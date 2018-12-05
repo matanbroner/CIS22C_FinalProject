@@ -66,8 +66,9 @@ namespace graph {
 
 	void graph(const int inputArray[], const int inputArraySize)
 	{
-		if (inputArraySize < 7)  //  display 7 days at a time maximum
-			numBars = inputArraySize;
+		numBars = inputArraySize;
+		if (inputArraySize > 7)  //  display 7 days at a time maximum
+			numBars = 7;
 
 		double maxValue = findMax(inputArray, inputArraySize);  //  double used to find y-axis scale
 		int leftBuffer = findMax(inputArray, inputArraySize);  //  integer used as numdigits for formatting
@@ -75,7 +76,9 @@ namespace graph {
 		std::string value = std::to_string(leftBuffer); // or wherever it's from;
 		const int digits = value.size();  //  max numdigits in data
 
-		std::string graphOutput[height];  //  string array to hold bar graph
+		std::string *graphOutput = NULL;
+		graphOutput = new std::string[height];
+		//std::string graphOutput[height];  //  string array to hold bar graph
 
 		int i = height - 4;  // -1, start from 0
 							 //  -4: one for y axis, one for numbers, one for page prompt & page entry
@@ -192,6 +195,8 @@ namespace graph {
 		for (int i = 0; i < height - 2; i++) {  //  height - 2 because we only use 78
 			std::cout << graphOutput[i] << std::endl;
 		}
+
+		delete [] graphOutput;
 	}  //  end graph function
 }  //  end namespace
 

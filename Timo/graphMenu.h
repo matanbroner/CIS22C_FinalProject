@@ -89,7 +89,7 @@ void graphMenu(HashTable<Day>& daysTable)
 	std::cout << test << std::endl;
 
 	if (tableSize > 7) {
-		numWeeks = ceil( double(tableSize / 7));
+		numWeeks = ceil(double(double(tableSize) / 7));;
 		daysInFinalWeek = tableSize % 7;
 	}
 	else if (tableSize == 7) {
@@ -157,12 +157,12 @@ void graphMenu(HashTable<Day>& daysTable)
 					option = 0;
 					break;
 				case 1:  //  calories
+					currentWeek = 1;
 					if (numWeeks > 1) {
-						currentWeek = 1;
 						do {
 							option = 1;
 							if (currentWeek != numWeeks) {  //  display currentWeek
-								for (int i = 0; i < 7; i++) {
+								for (int i = (currentWeek*7-7); i < 7+(currentWeek * 7 - 7); i++) {
 									Day *temp = new Day;
 									*temp = tableArray[i]->getData();
 									passToGraph[i] = temp->totalCal();
@@ -225,13 +225,16 @@ void graphMenu(HashTable<Day>& daysTable)
 								}
 							}
 							else {  //  display last week
-								for (int i = 0; i < daysInFinalWeek; i++) {
+								int last = 0;
+								for (int i = ( numWeeks * 7 - 7 ); i < ( numWeeks * 7 + daysInFinalWeek -7 ); i++) {
 									Day *temp = new Day;
 									*temp = tableArray[i]->getData();
-									passToGraph[i] = temp->totalCal();
+									passToGraph[last] = temp->totalCal();
 									delete temp;
+									last++;
 								}
 								system("cls||clear");
+
 								graph::graph(passToGraph, daysInFinalWeek);
 
 								std::cout << "Calorie view of week " << currentWeek << "/" << numWeeks << "\t"
@@ -337,11 +340,13 @@ void graphMenu(HashTable<Day>& daysTable)
 								}
 							}
 							else {  //  display last week
-								for (int i = 0; i < daysInFinalWeek; i++) {
+								int last = 0;
+								for (int i = ( numWeeks * 7 - 7 ); i < ( numWeeks * 7 + daysInFinalWeek -7 ); i++) {
 									Day *temp = new Day;
 									*temp = tableArray[i]->getData();
-									passToGraph[i] = temp->getFat();
+									passToGraph[last] = temp->getFat();
 									delete temp;
+									last++;
 								}
 								system("cls||clear");
 								graph::graph(passToGraph, daysInFinalWeek);
@@ -449,11 +454,13 @@ void graphMenu(HashTable<Day>& daysTable)
 								}
 							}
 							else {  //  display last week
-								for (int i = 0; i < daysInFinalWeek; i++) {
+								int last = 0;
+								for (int i = ( numWeeks * 7 - 7 ); i < ( numWeeks * 7 + daysInFinalWeek -7 ); i++) {
 									Day *temp = new Day;
 									*temp = tableArray[i]->getData();
-									passToGraph[i] = temp->getCarb();
+									passToGraph[last] = temp->getCarb();
 									delete temp;
+									last++;
 								}
 								system("cls||clear");
 								graph::graph(passToGraph, daysInFinalWeek);
@@ -561,11 +568,13 @@ void graphMenu(HashTable<Day>& daysTable)
 								}
 							}
 							else {  //  display last week
-								for (int i = 0; i < daysInFinalWeek; i++) {
+								int last = 0;
+								for (int i = ( numWeeks * 7 - 7 ); i < ( numWeeks * 7 + daysInFinalWeek -7 ); i++) {
 									Day *temp = new Day;
 									*temp = tableArray[i]->getData();
-									passToGraph[i] = temp->getProt();
+									passToGraph[last] = temp->getProt();
 									delete temp;
+									last++;
 								}
 								system("cls||clear");
 								graph::graph(passToGraph, daysInFinalWeek);
@@ -1017,8 +1026,8 @@ void graphMenu(HashTable<Day>& daysTable)
 		 std::cin.get();
 	}
 
-	 delete passToGraph;
-	 delete tableArray;
+	 delete [] passToGraph;
+	 delete [] tableArray;
 	 system("cls||clear");
 }  //  end graphMenu function
 

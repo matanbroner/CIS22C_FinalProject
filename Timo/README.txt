@@ -1,7 +1,7 @@
 ========
 ISSUE(S)
 ========
-NEW ISSUE, PAGINATION IS BROKE, FIXING
+averages throws out of range
 
 All issues fixed--basically I was treating the hash table like an array when I had to treat it like a hash table...
 
