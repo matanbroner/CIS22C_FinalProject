@@ -240,13 +240,31 @@ void graphMenu(HashTable<Day>& daysTable)
 							//Day(double f, double c, double p, int dt);
 							//Day *temp = new Day(double(0), double(0), double(0), 0);
 							//*temp =
-							int fat = (daysTable[i]->getData()).getFat();
-							int carb = (daysTable[i]->getData()).getCarb();
-							int prot = (daysTable[i]->getData()).getProt();
-							int date = (daysTable[i]->getData()).getDate();
-							Day *temp = new Day(fat, carb, prot, date);
+
+//							the daystable index returns a hashnode<t> ptr
+//							this hashnode can be used to get the data
+
+							Day *temp = new Day;
+							HashNode<Day> *tempHashNodeptr = new HashNode<Day>(daysTable[i]->getData(), daysTable[i]->getKey());
+							*temp = tempHashNodeptr->getData();
 							passToGraph[i] = temp->totalCal();
+
+							//HashNode<T> **dataTable;
+							//return this->dataTable[index];
+							//this->dataTable = new HashNode<T>*[size] {0};
+
+							//HashNode<T>* tempNode = new HashNode<T>(value, givenKey);
+
 							delete temp;
+							delete tempHashNodeptr;
+
+							//int fat = (daysTable[i]->getData()).getFat();
+							//int carb = (daysTable[i]->getData()).getCarb();
+							//int prot = (daysTable[i]->getData()).getProt();
+							//int date = (daysTable[i]->getData()).getDate();
+							//Day *temp = new Day(fat, carb, prot, date);
+							//passToGraph[i] = temp->totalCal();
+							//delete temp;
 
 							//Day *temp = new Day;
 							//*temp = daysTable[i]->getData();
