@@ -1,6 +1,9 @@
 =======
 Warning
 =======
+The method I'm using to get a day from daysTable is not working so that's the current bug:
+testing different methods at line 228 and nothing is working so far
+
 I can't get it to run with the tester at the moment, I fixed a line in DayManager that wouldn't let me compile the program:
 line 97:
 Day::setCT(std::stoi(tempString));                // set calorie target

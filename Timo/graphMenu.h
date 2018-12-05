@@ -26,10 +26,6 @@ int getInt(const std::string options);
 //  CentralApplication.h should call graphMenu with its daysTable
 void graphMenu(HashTable<Day>& daysTable);
 
-//hashtable
-//int getSize();  // returns available size of table
-//HashNode<T>* operator[](int); // allows user to treat table as an array by using bracketed index notation
-
 int getInt(const std::string options)
 {
 	int input = 0;
@@ -230,10 +226,32 @@ void graphMenu(HashTable<Day>& daysTable)
 					}
 					else {
 						for (int i = 0; i < tableSize; i++) {
-							Day *temp = new Day;
-							*temp = daysTable[i]->getData();
+							//Day *temp = new Day(daysTable[daysTable.search(std::to_string(i))]->getData());
+							//passToGraph[i] = temp->totalCal();
+
+
+							//Day *temp = new Day(daysTable[i]->getData());
+							//passToGraph[i] = temp->totalCal();
+
+							//Day temp(daysTable[i]->getData());
+							//passToGraph[i] = temp.totalCal();
+
+
+							//Day(double f, double c, double p, int dt);
+							//Day *temp = new Day(double(0), double(0), double(0), 0);
+							//*temp =
+							int fat = (daysTable[i]->getData()).getFat();
+							int carb = (daysTable[i]->getData()).getCarb();
+							int prot = (daysTable[i]->getData()).getProt();
+							int date = (daysTable[i]->getData()).getDate();
+							Day *temp = new Day(fat, carb, prot, date);
 							passToGraph[i] = temp->totalCal();
 							delete temp;
+
+							//Day *temp = new Day;
+							//*temp = daysTable[i]->getData();
+							//passToGraph[i] = temp->totalCal();
+							//delete temp;
 						}
 						system("cls||clear");
 						graph::graph(passToGraph, tableSize);
