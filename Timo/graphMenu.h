@@ -92,9 +92,10 @@ void graphMenu(HashTable<Day>& daysTable)
 	//  start menu loop
 	int quit = 0;
 	int option = 0;
-	std::string options = "";
+	std::string options = "0123456789";
 
-	int passToGraph[7];  //  array of size 7 to pass to graph function;
+	int *passToGraph = NULL;  //  array of to pass to graph function;
+	passToGraph = new int[tableSize];
 	HashNode<Day> **tableArray;
 	tableArray = new HashNode<Day>*[tableSize];
 
@@ -307,7 +308,7 @@ void graphMenu(HashTable<Day>& daysTable)
 							//delete temp;
 						}
 						system("cls||clear");
-						graph::graph(passToGraph, tableSize);
+						graph::graph(passToGraph, 7);
 
 						std::cout << "Weekly view of week " << currentWeek << "/" << numWeeks << "\t"
 							<< "[0] Return" << std::endl;
@@ -419,7 +420,7 @@ void graphMenu(HashTable<Day>& daysTable)
 							delete temp;
 						}
 						system("cls||clear");
-						graph::graph(passToGraph, tableSize);
+						graph::graph(passToGraph, 7);
 
 						std::cout << "Weekly view of week " << currentWeek << "/" << numWeeks << "\t"
 							<< "[0] Return" << std::endl;
@@ -531,7 +532,7 @@ void graphMenu(HashTable<Day>& daysTable)
 							delete temp;
 						}
 						system("cls||clear");
-						graph::graph(passToGraph, tableSize);
+						graph::graph(passToGraph, 7);
 
 						std::cout << "Weekly view of week " << currentWeek << "/" << numWeeks << "\t"
 							<< "[0] Return" << std::endl;
@@ -643,7 +644,7 @@ void graphMenu(HashTable<Day>& daysTable)
 							delete temp;
 						}
 						system("cls||clear");
-						graph::graph(passToGraph, tableSize);
+						graph::graph(passToGraph, 7);
 
 						std::cout << "Weekly view of week " << currentWeek << "/" << numWeeks << "\t"
 							<< "[0] Return" << std::endl;
@@ -1065,6 +1066,7 @@ void graphMenu(HashTable<Day>& daysTable)
 		 std::cin.get();
 	}
 
+	 delete passToGraph;
 	 delete tableArray;
 //	 system("cls||clear");
 }  //  end graphMenu function
