@@ -1,16 +1,9 @@
 ========
 ISSUE(S)
 ========
-It's "working", I can't call calories graph until another is called or the thing is just dead
+All issues fixed--basically I was treating the hash table like an array when I had to treat it like a hash table...
 
-CRITICAL: stack around "passToGraph" is corrupted upon ending function call graphMenu()
-am working on this...
-
-//I'm being dumb and it's a hash table so obviously the stuff runs through the hash and wont be in [0,tableSize)
-//I need to get days in hashtable by day which means I have to count through != nullptr
-//... now i have to code that and hope it works
-
-also for the data:
+data:
 I realized I'm not displaying data vs calorie target but instead just displaying data and I can't easily just write a whole thing to do that so I'm sticking with just displaying a week of data and displaying averages...
 
 ===========
@@ -25,16 +18,20 @@ i.e.
 
 graphMenu(this->daysTable);
 
-=======================
-files necessary to add:
-=======================
+============================
+files necessary to add/edit:
+============================
 graph.h
 graphMenu.h
 Day.h
+CentralApplication.h
 
 files necessary to edit:
-CentralApplication.h
+CentralApplication.h & Day.h
 #include "graphMenu.h"
+line 86 in processMenuChoice
+std::cout << "[8] - Visualization of logged days data" << std::endl;
+
 line 134 in processMenuChoice
 case 8: // graph function
 	graphMenu(this->daysTable);
