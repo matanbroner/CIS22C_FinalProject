@@ -1,9 +1,11 @@
 ========
 ISSUE(S)
 ========
-I'm being dumb and it's a hash table so obviously the stuff runs through the hash and wont be in [0,tableSize)
-I need to get days in hashtable by day which means I have to count through != nullptr
-... now i have to code that and hope it works
+It's "working", I can't call calories graph until another is called or the thing is just dead
+
+//I'm being dumb and it's a hash table so obviously the stuff runs through the hash and wont be in [0,tableSize)
+//I need to get days in hashtable by day which means I have to count through != nullptr
+//... now i have to code that and hope it works
 
 also for the data:
 I realized I'm not displaying data vs calorie target but instead just displaying data and I can't easily just write a whole thing to do that so I'm sticking with just displaying a week of data and displaying averages...
