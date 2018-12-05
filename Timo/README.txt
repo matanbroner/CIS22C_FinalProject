@@ -10,7 +10,7 @@ Day temp(std::stod(fat), std::stod(carb), std::stod(protein), std::stoi(date));
 temp.setCT(std::stoi(tempString));
 
 
-I realized I'm not displaying data vs calorie target but instead just displaying data and I can't easily just write a whole thing to do that so I'm sticking with just displaying data and displaying averages...
+I realized I'm not displaying data vs calorie target but instead just displaying data and I can't easily just write a whole thing to do that so I'm sticking with just displaying a week of data and displaying averages...
 
 ===========
 graph usage
