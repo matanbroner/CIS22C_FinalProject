@@ -1,21 +1,17 @@
-=======
-Warning
-=======
+========
+ISSUE(S)
+========
+No matter how I try to get a day out of hashtable it somehow gives me a null pointer and I can't figure it out
+
+testing different methods at line 228 and nothing is working so far
+
+basically:
 The method I'm using to get a day from daysTable is not working so that's the current bug:
 the pointer returned from getData() is NULL, seemingly implying daysTable[ [0,tableSize) ] are invalid / return NULL
 still trying to figure it out
 
-testing different methods at line 228 and nothing is working so far
 
-I can't get it to run with the tester at the moment, I fixed a line in DayManager that wouldn't let me compile the program:
-line 97:
-Day::setCT(std::stoi(tempString));                // set calorie target
-
-edited and moved after line 104:
-Day temp(std::stod(fat), std::stod(carb), std::stod(protein), std::stoi(date));
-temp.setCT(std::stoi(tempString));
-
-
+also for the data:
 I realized I'm not displaying data vs calorie target but instead just displaying data and I can't easily just write a whole thing to do that so I'm sticking with just displaying a week of data and displaying averages...
 
 ===========
