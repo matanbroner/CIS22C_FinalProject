@@ -95,10 +95,23 @@ void graphMenu(HashTable<Day>& daysTable)
 	std::string options = "";
 
 	int passToGraph[7];  //  array of size 7 to pass to graph function;
+	HashNode<Day> **tableArray;
+	tableArray = new HashNode<Day>*[tableSize];
 
 	if (tableSize > 0) {  //  require at least one day
+
+		//  grab all data from daystable
+		int counter = 0;
+
+		for (int index = 0; index < daysTable.getSize(); index++) {
+			if (daysTable[index] != nullptr) {
+				tableArray[counter] = daysTable[index];
+				counter++;  //  numDays
+			}
+		}
+
 		do {
-			system("cls||clear");
+			//system("cls||clear");
 			std::cout << "==================" << std::endl;
 			std::cout << "Graph Menu Options" << std::endl;
 			std::cout << "==================" << std::endl;
@@ -137,7 +150,7 @@ void graphMenu(HashTable<Day>& daysTable)
 							if (currentWeek != numWeeks) {  //  display currentWeek
 								for (int i = 0; i < 7; i++) {
 									Day *temp = new Day;
-									*temp = daysTable[i]->getData();
+									*temp = tableArray[i]->getData();
 									passToGraph[i] = temp->totalCal();
 									delete temp;
 								}
@@ -200,7 +213,7 @@ void graphMenu(HashTable<Day>& daysTable)
 							else {  //  display last week
 								for (int i = 0; i < daysInFinalWeek; i++) {
 									Day *temp = new Day;
-									*temp = daysTable[i]->getData();
+									*temp = tableArray[i]->getData();
 									passToGraph[i] = temp->totalCal();
 									delete temp;
 								}
@@ -226,14 +239,14 @@ void graphMenu(HashTable<Day>& daysTable)
 					}
 					else {
 						for (int i = 0; i < tableSize; i++) {
-							//Day *temp = new Day(daysTable[daysTable.search(std::to_string(i))]->getData());
+							//Day *temp = new Day(tableArray[tableArray.search(std::to_string(i))]->getData());
 							//passToGraph[i] = temp->totalCal();
 
 
-							//Day *temp = new Day(daysTable[i]->getData());
+							//Day *temp = new Day(tableArray[i]->getData());
 							//passToGraph[i] = temp->totalCal();
 
-							//Day temp(daysTable[i]->getData());
+							//Day temp(tableArray[i]->getData());
 							//passToGraph[i] = temp.totalCal();
 
 
@@ -245,9 +258,33 @@ void graphMenu(HashTable<Day>& daysTable)
 //							this hashnode can be used to get the data
 
 							Day *temp = new Day;
-							HashNode<Day> *tempHashNodeptr = new HashNode<Day>(daysTable[i]->getData(), daysTable[i]->getKey());
-							*temp = tempHashNodeptr->getData();
-							passToGraph[i] = temp->totalCal();
+
+							int counter = 0;
+
+							for (int index = 0; index < daysTable.getSize(); index++) {
+								if (tableArray[index] != nullptr) {
+
+									counter++;
+								}
+
+							}
+
+							delete temp;
+//							HashNode<Day> *tempHashNodeptr = new HashNode<Day>(tableArray[i]->getData(), tableArray[i]->getKey());
+//							HashNode<Day> *tempHashNodeptr = tableArray[i];
+
+
+
+							//if (tempHashNodeptr != NULL) {
+							//	*temp = tempHashNodeptr->getData();
+							//	passToGraph[i] = temp->totalCal();
+							//}
+							//else {
+							//	std::cout << "it's null and we're doomed\n";
+							//}
+
+
+							//delete tempHashNodeptr;
 
 							//HashNode<T> **dataTable;
 							//return this->dataTable[index];
@@ -255,19 +292,17 @@ void graphMenu(HashTable<Day>& daysTable)
 
 							//HashNode<T>* tempNode = new HashNode<T>(value, givenKey);
 
-							delete temp;
-							delete tempHashNodeptr;
 
-							//int fat = (daysTable[i]->getData()).getFat();
-							//int carb = (daysTable[i]->getData()).getCarb();
-							//int prot = (daysTable[i]->getData()).getProt();
-							//int date = (daysTable[i]->getData()).getDate();
+							//int fat = (tableArray[i]->getData()).getFat();
+							//int carb = (tableArray[i]->getData()).getCarb();
+							//int prot = (tableArray[i]->getData()).getProt();
+							//int date = (tableArray[i]->getData()).getDate();
 							//Day *temp = new Day(fat, carb, prot, date);
 							//passToGraph[i] = temp->totalCal();
 							//delete temp;
 
 							//Day *temp = new Day;
-							//*temp = daysTable[i]->getData();
+							//*temp = tableArray[i]->getData();
 							//passToGraph[i] = temp->totalCal();
 							//delete temp;
 						}
@@ -289,7 +324,7 @@ void graphMenu(HashTable<Day>& daysTable)
 							if (currentWeek != numWeeks) {  //  display currentWeek
 								for (int i = 0; i < 7; i++) {
 									Day *temp = new Day;
-									*temp = daysTable[i]->getData();
+									*temp = tableArray[i]->getData();
 									passToGraph[i] = temp->getFat();
 									delete temp;
 								}
@@ -352,7 +387,7 @@ void graphMenu(HashTable<Day>& daysTable)
 							else {  //  display last week
 								for (int i = 0; i < daysInFinalWeek; i++) {
 									Day *temp = new Day;
-									*temp = daysTable[i]->getData();
+									*temp = tableArray[i]->getData();
 									passToGraph[i] = temp->getFat();
 									delete temp;
 								}
@@ -379,7 +414,7 @@ void graphMenu(HashTable<Day>& daysTable)
 					else {
 						for (int i = 0; i < tableSize; i++) {
 							Day *temp = new Day;
-							*temp = daysTable[i]->getData();
+							*temp = tableArray[i]->getData();
 							passToGraph[i] = temp->getFat();
 							delete temp;
 						}
@@ -401,7 +436,7 @@ void graphMenu(HashTable<Day>& daysTable)
 							if (currentWeek != numWeeks) {  //  display currentWeek
 								for (int i = 0; i < 7; i++) {
 									Day *temp = new Day;
-									*temp = daysTable[i]->getData();
+									*temp = tableArray[i]->getData();
 									passToGraph[i] = temp->getCarb();
 									delete temp;
 								}
@@ -464,7 +499,7 @@ void graphMenu(HashTable<Day>& daysTable)
 							else {  //  display last week
 								for (int i = 0; i < daysInFinalWeek; i++) {
 									Day *temp = new Day;
-									*temp = daysTable[i]->getData();
+									*temp = tableArray[i]->getData();
 									passToGraph[i] = temp->getCarb();
 									delete temp;
 								}
@@ -491,7 +526,7 @@ void graphMenu(HashTable<Day>& daysTable)
 					else {
 						for (int i = 0; i < tableSize; i++) {
 							Day *temp = new Day;
-							*temp = daysTable[i]->getData();
+							*temp = tableArray[i]->getData();
 							passToGraph[i] = temp->getCarb();
 							delete temp;
 						}
@@ -513,7 +548,7 @@ void graphMenu(HashTable<Day>& daysTable)
 							if (currentWeek != numWeeks) {  //  display currentWeek
 								for (int i = 0; i < 7; i++) {
 									Day *temp = new Day;
-									*temp = daysTable[i]->getData();
+									*temp = tableArray[i]->getData();
 									passToGraph[i] = temp->getProt();
 									delete temp;
 								}
@@ -576,7 +611,7 @@ void graphMenu(HashTable<Day>& daysTable)
 							else {  //  display last week
 								for (int i = 0; i < daysInFinalWeek; i++) {
 									Day *temp = new Day;
-									*temp = daysTable[i]->getData();
+									*temp = tableArray[i]->getData();
 									passToGraph[i] = temp->getProt();
 									delete temp;
 								}
@@ -603,7 +638,7 @@ void graphMenu(HashTable<Day>& daysTable)
 					else {
 						for (int i = 0; i < tableSize; i++) {
 							Day *temp = new Day;
-							*temp = daysTable[i]->getData();
+							*temp = tableArray[i]->getData();
 							passToGraph[i] = temp->getProt();
 							delete temp;
 						}
@@ -670,7 +705,7 @@ void graphMenu(HashTable<Day>& daysTable)
 								if (i != numWeeks-1) {
 									for (int j = (i - 1) * 7; j < ((i - 1) * 7 + 7); j++) {
 										Day* temp = new Day;
-										*temp = daysTable[j]->getData();
+										*temp = tableArray[j]->getData();
 										passToGraph[i] += temp->totalCal();
 										delete temp;
 									}
@@ -679,7 +714,7 @@ void graphMenu(HashTable<Day>& daysTable)
 								else {  //  we are at lastWeek, and need to divide by something less than 7
 									for (int j = (i - 1) * 7; j < ((i - 1) * 7 + daysInFinalWeek); j++) {
 										Day* temp = new Day;
-										*temp = daysTable[j]->getData();
+										*temp = tableArray[j]->getData();
 										passToGraph[i] += temp->totalCal();
 										delete temp;
 									}
@@ -762,7 +797,7 @@ void graphMenu(HashTable<Day>& daysTable)
 								if (i != numWeeks - 1) {
 									for (int j = (i - 1) * 7; j < ((i - 1) * 7 + 7); j++) {
 										Day* temp = new Day;
-										*temp = daysTable[j]->getData();
+										*temp = tableArray[j]->getData();
 										passToGraph[i] += temp->getFat();
 										delete temp;
 									}
@@ -771,7 +806,7 @@ void graphMenu(HashTable<Day>& daysTable)
 								else {  //  we are at lastWeek, and need to divide by something less than 7
 									for (int j = (i - 1) * 7; j < ((i - 1) * 7 + daysInFinalWeek); j++) {
 										Day* temp = new Day;
-										*temp = daysTable[j]->getData();
+										*temp = tableArray[j]->getData();
 										passToGraph[i] += temp->getFat();
 										delete temp;
 									}
@@ -854,7 +889,7 @@ void graphMenu(HashTable<Day>& daysTable)
 								if (i != numWeeks - 1) {
 									for (int j = (i - 1) * 7; j < ((i - 1) * 7 + 7); j++) {
 										Day* temp = new Day;
-										*temp = daysTable[j]->getData();
+										*temp = tableArray[j]->getData();
 										passToGraph[i] += temp->getCarb();
 										delete temp;
 									}
@@ -863,7 +898,7 @@ void graphMenu(HashTable<Day>& daysTable)
 								else {  //  we are at lastWeek, and need to divide by something less than 7
 									for (int j = (i - 1) * 7; j < ((i - 1) * 7 + daysInFinalWeek); j++) {
 										Day* temp = new Day;
-										*temp = daysTable[j]->getData();
+										*temp = tableArray[j]->getData();
 										passToGraph[i] += temp->getCarb();
 										delete temp;
 									}
@@ -946,7 +981,7 @@ void graphMenu(HashTable<Day>& daysTable)
 								if (i != numWeeks - 1) {
 									for (int j = (i - 1) * 7; j < ((i - 1) * 7 + 7); j++) {
 										Day* temp = new Day;
-										*temp = daysTable[j]->getData();
+										*temp = tableArray[j]->getData();
 										passToGraph[i] += temp->getProt();
 										delete temp;
 									}
@@ -955,7 +990,7 @@ void graphMenu(HashTable<Day>& daysTable)
 								else {  //  we are at lastWeek, and need to divide by something less than 7
 									for (int j = (i - 1) * 7; j < ((i - 1) * 7 + daysInFinalWeek); j++) {
 										Day* temp = new Day;
-										*temp = daysTable[j]->getData();
+										*temp = tableArray[j]->getData();
 										passToGraph[i] += temp->getProt();
 										delete temp;
 									}
@@ -1029,6 +1064,8 @@ void graphMenu(HashTable<Day>& daysTable)
 			 << "Press ENTER to continue...";
 		 std::cin.get();
 	}
+
+	 delete tableArray;
 //	 system("cls||clear");
 }  //  end graphMenu function
 
