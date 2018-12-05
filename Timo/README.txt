@@ -3,6 +3,9 @@ ISSUE(S)
 ========
 It's "working", I can't call calories graph until another is called or the thing is just dead
 
+CRITICAL: stack around "passToGraph" is corrupted upon ending function call graphMenu()
+am working on this...
+
 //I'm being dumb and it's a hash table so obviously the stuff runs through the hash and wont be in [0,tableSize)
 //I need to get days in hashtable by day which means I have to count through != nullptr
 //... now i have to code that and hope it works
