@@ -1,7 +1,7 @@
 ========
 ISSUE(S)
 ========
-averages throws out of range
+I don't think there are any more issues -- 10:16 am
 
 All issues fixed--basically I was treating the hash table like an array when I had to treat it like a hash table...
 

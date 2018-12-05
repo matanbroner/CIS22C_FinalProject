@@ -652,19 +652,20 @@ void graphMenu(HashTable<Day>& daysTable)
 							//  start position is one week before current week
 							//  unless numWeeks < currentWeek
 							//  end position is currentWeek
-							int i = 0;
-							if (numWeeks < currentWeek) {
-								i = numWeeks - ( 7 - (currentWeek - numWeeks) );
-							}
-							else {
-								i = currentWeek - 7;
-							}
+							//int i = 0;
 
+							//if (numWeeks < currentWeek) {
+							//	i = numWeeks - ( 7 - (currentWeek - numWeeks) );
+							//}
+							//else {
+							//	i = currentWeek * 7 - 7;
+							//}
+							//int tempInt = i;
 
-							for (i;  i < currentWeek; i++) {
+							for (int i = 0;  i < numWeeks; i++) {  //  loop numWeeks times, adding 7 days to each position
 								passToGraph[i] = 0;  //  start at 0, add each day, then divide for average
 								if (i != numWeeks-1) {
-									for (int j = (i - 1) * 7; j < ((i - 1) * 7 + 7); j++) {
+									for (int j = i * 7; j < (i * 7 + 7); j++) {
 										Day* temp = new Day;
 										*temp = tableArray[j]->getData();
 										passToGraph[i] += temp->totalCal();
@@ -673,7 +674,7 @@ void graphMenu(HashTable<Day>& daysTable)
 									passToGraph[i] /= 7;  //  divide by days to get average
 								}
 								else {  //  we are at lastWeek, and need to divide by something less than 7
-									for (int j = (i - 1) * 7; j < ((i - 1) * 7 + daysInFinalWeek); j++) {
+									for (int j = i * 7; j < (i * 7 + daysInFinalWeek); j++) {
 										Day* temp = new Day;
 										*temp = tableArray[j]->getData();
 										passToGraph[i] += temp->totalCal();
@@ -741,22 +742,10 @@ void graphMenu(HashTable<Day>& daysTable)
 						do {
 							option = 1;
 
-							//  start position is one week before current week
-							//  unless numWeeks < currentWeek
-							//  end position is currentWeek
-							int i = 0;
-							if (numWeeks < currentWeek) {
-								i = numWeeks - (7 - (currentWeek - numWeeks));
-							}
-							else {
-								i = currentWeek - 7;
-							}
-
-
-							for (i; i < currentWeek; i++) {
+							for (int i = 0;  i < numWeeks; i++) {  //  loop numWeeks times, adding 7 days to each position
 								passToGraph[i] = 0;  //  start at 0, add each day, then divide for average
-								if (i != numWeeks - 1) {
-									for (int j = (i - 1) * 7; j < ((i - 1) * 7 + 7); j++) {
+								if (i != numWeeks-1) {
+									for (int j = i * 7; j < (i * 7 + 7); j++) {
 										Day* temp = new Day;
 										*temp = tableArray[j]->getData();
 										passToGraph[i] += temp->getFat();
@@ -765,7 +754,7 @@ void graphMenu(HashTable<Day>& daysTable)
 									passToGraph[i] /= 7;  //  divide by days to get average
 								}
 								else {  //  we are at lastWeek, and need to divide by something less than 7
-									for (int j = (i - 1) * 7; j < ((i - 1) * 7 + daysInFinalWeek); j++) {
+									for (int j = i * 7; j < (i * 7 + daysInFinalWeek); j++) {
 										Day* temp = new Day;
 										*temp = tableArray[j]->getData();
 										passToGraph[i] += temp->getFat();
@@ -833,22 +822,10 @@ void graphMenu(HashTable<Day>& daysTable)
 						do {
 							option = 1;
 
-							//  start position is one week before current week
-							//  unless numWeeks < currentWeek
-							//  end position is currentWeek
-							int i = 0;
-							if (numWeeks < currentWeek) {
-								i = numWeeks - (7 - (currentWeek - numWeeks));
-							}
-							else {
-								i = currentWeek - 7;
-							}
-
-
-							for (i; i < currentWeek; i++) {
+							for (int i = 0;  i < numWeeks; i++) {  //  loop numWeeks times, adding 7 days to each position
 								passToGraph[i] = 0;  //  start at 0, add each day, then divide for average
-								if (i != numWeeks - 1) {
-									for (int j = (i - 1) * 7; j < ((i - 1) * 7 + 7); j++) {
+								if (i != numWeeks-1) {
+									for (int j = i * 7; j < (i * 7 + 7); j++) {
 										Day* temp = new Day;
 										*temp = tableArray[j]->getData();
 										passToGraph[i] += temp->getCarb();
@@ -857,7 +834,7 @@ void graphMenu(HashTable<Day>& daysTable)
 									passToGraph[i] /= 7;  //  divide by days to get average
 								}
 								else {  //  we are at lastWeek, and need to divide by something less than 7
-									for (int j = (i - 1) * 7; j < ((i - 1) * 7 + daysInFinalWeek); j++) {
+									for (int j = i * 7; j < (i * 7 + daysInFinalWeek); j++) {
 										Day* temp = new Day;
 										*temp = tableArray[j]->getData();
 										passToGraph[i] += temp->getCarb();
@@ -925,22 +902,10 @@ void graphMenu(HashTable<Day>& daysTable)
 						do {
 							option = 1;
 
-							//  start position is one week before current week
-							//  unless numWeeks < currentWeek
-							//  end position is currentWeek
-							int i = 0;
-							if (numWeeks < currentWeek) {
-								i = numWeeks - (7 - (currentWeek - numWeeks));
-							}
-							else {
-								i = currentWeek - 7;
-							}
-
-
-							for (i; i < currentWeek; i++) {
+							for (int i = 0; i < numWeeks; i++) {  //  loop numWeeks times, adding 7 days to each position
 								passToGraph[i] = 0;  //  start at 0, add each day, then divide for average
 								if (i != numWeeks - 1) {
-									for (int j = (i - 1) * 7; j < ((i - 1) * 7 + 7); j++) {
+									for (int j = i * 7; j < (i * 7 + 7); j++) {
 										Day* temp = new Day;
 										*temp = tableArray[j]->getData();
 										passToGraph[i] += temp->getProt();
@@ -949,7 +914,7 @@ void graphMenu(HashTable<Day>& daysTable)
 									passToGraph[i] /= 7;  //  divide by days to get average
 								}
 								else {  //  we are at lastWeek, and need to divide by something less than 7
-									for (int j = (i - 1) * 7; j < ((i - 1) * 7 + daysInFinalWeek); j++) {
+									for (int j = i * 7; j < (i * 7 + daysInFinalWeek); j++) {
 										Day* temp = new Day;
 										*temp = tableArray[j]->getData();
 										passToGraph[i] += temp->getProt();
